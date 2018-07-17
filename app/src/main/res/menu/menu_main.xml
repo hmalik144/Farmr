@@ -1,0 +1,42 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.h_mal.shift_tracker.MainActivity">
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/image_i_64"
+        android:orderInCategory="300"
+        android:title="User"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/filter_data"
+        android:orderInCategory="100"
+        android:title="@string/filter"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/clear_filter"
+        android:orderInCategory="100"
+        android:title="@string/clear"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/export_data"
+        android:orderInCategory="100"
+        android:title="@string/export"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/sort_data"
+        android:orderInCategory="100"
+        android:title="@string/sort"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/delete_all"
+        android:orderInCategory="100"
+        android:title="@string/delete"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/help"
+        android:orderInCategory="100"
+        android:title="@string/help"
+        app:showAsAction="never" />
+
+</menu>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.h_mal.shift_tracker">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/farmicon"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/farmicon"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!-- Splash screen -->
+        <activity
+            android:name=".SplashScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".SplashScreen"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--<activity-->
+            <!--android:name=".LoginSetup"-->
+            <!--android:parentActivityName=".SplashScreen"-->
+            <!--android:theme="@style/Theme.AppCompat.Light.NoActionBar">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value=".SplashScreen" />-->
+        <!--</activity>-->
+        <!--<activity-->
+            <!--android:name=".LoginScreen"-->
+            <!--android:parentActivityName=".SplashScreen"-->
+            <!--android:theme="@style/Theme.AppCompat.Light.NoActionBar">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value=".SplashScreen" />-->
+        <!--</activity>-->
+
+        <provider
+            android:name=".Data.ShiftProvider"
+            android:authorities="com.example.h_mal.shift_tracker"
+            android:exported="false" />
+    </application>
+
+</manifest>

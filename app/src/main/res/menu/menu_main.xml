@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.h_mal.shift_tracker.MainActivity">
+    tools:context="com.appttude.h_mal.farmr.MainActivity">
     <item
         android:id="@+id/action_favorite"
         android:icon="@drawable/image_i_64"

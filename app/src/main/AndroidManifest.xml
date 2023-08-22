@@ -17,10 +17,10 @@
         <!-- Splash screen -->
         <activity
             android:name="com.appttude.h_mal.farmr.SplashScreen"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar"
-            tools:ignore="LockedOrientationActivity">
+            tools:ignore="LockedOrientationActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,12 +28,12 @@
         </activity>
         <activity
             android:name="com.appttude.h_mal.farmr.MainActivity"
-            android:label="@string/app_name"
             android:parentActivityName="com.appttude.h_mal.farmr.SplashScreen"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true"/>
 
         <provider
-            android:name="com.appttude.h_mal.farmr.Data.ShiftProvider"
+            android:name="com.appttude.h_mal.farmr.data.ShiftProvider"
             android:authorities="com.appttude.h_mal.farmr"
             android:exported="false" />
     </application>

@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Shift_tracker.iml" filepath="$PROJECT_DIR$/Shift_tracker.iml" group="Shift_tracker" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Shift_tracker/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Farmr.iml" filepath="$PROJECT_DIR$/.idea/modules/Farmr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Farmr.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Farmr.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Farmr.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Farmr.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Farmr.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Farmr.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Farmr.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Farmr.app.unitTest.iml" />
     </modules>
   </component>
 </project>

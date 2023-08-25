@@ -1,4 +1,4 @@
-package com.appttude.h_mal.farmr.data
+package com.appttude.h_mal.farmr.data.legacydb
 
 import android.content.ContentResolver
 import android.net.Uri

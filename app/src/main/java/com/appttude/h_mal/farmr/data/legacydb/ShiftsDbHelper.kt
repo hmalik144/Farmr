@@ -1,9 +1,9 @@
-package com.appttude.h_mal.farmr.data
+package com.appttude.h_mal.farmr.data.legacydb
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry
 
 /**
  * Created by h_mal on 26/12/2017.

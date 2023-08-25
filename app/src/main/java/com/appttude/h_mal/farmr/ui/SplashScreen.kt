@@ -1,4 +1,4 @@
-package com.appttude.h_mal.farmr
+package com.appttude.h_mal.farmr.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.os.Handler
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.core.app.ActivityOptionsCompat
+import com.appttude.h_mal.farmr.R
 
 /**
  * Created by h_mal on 27/06/2017.

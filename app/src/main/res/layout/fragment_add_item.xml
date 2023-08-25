@@ -8,15 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.appttude.h_mal.farmr.FragmentAddItem"
+    tools:context="com.appttude.h_mal.farmr.ui.FragmentAddItem"
     android:orientation="vertical">
-
-    <ProgressBar
-        android:id="@+id/pd_ai"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -189,7 +182,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Break"
+                        android:text="@string/break_res"
                         android:textAppearance="@style/TextAppearance.AppCompat" />
 
                     <EditText
@@ -198,7 +191,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:ems="10"
-                        android:hint="Break in minutes"
+                        android:hint="@string/insert_break_in_minutes"
                         android:inputType="number"
                         android:selectAllOnFocus="true" />
                 </LinearLayout>

@@ -34,11 +34,33 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.preference:preference:1.2.1'
-
     implementation 'com.ajts.androidmads.SQLite2Excel:library:1.0.2'
-    testImplementation 'junit:junit:4.12'
+    / * Unit testing * /
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     androidTestImplementation 'androidx.test:core-ktx:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
+    / * mockito and livedata testing * /
+    testImplementation 'org.mockito:mockito-inline:2.13.0'
+    implementation 'androidx.arch.core:core-testing:2.1.0'
+    / * MockK * /
+    def mockk_ver = "1.10.5"
+    testImplementation "io.mockk:mockk:$mockk_ver"
+    androidTestImplementation "io.mockk:mockk-android:$mockk_ver"
+    / * Android Espresso * /
+    def testJunitVersion = "1.1.5"
+    def testRunnerVersion = "1.5.2"
+    def espressoVersion = "3.5.1"
+    androidTestImplementation "androidx.test.ext:junit:$testJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espressoVersion"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
+    androidTestImplementation "androidx.test:runner:$testRunnerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
+    androidTestImplementation "org.hamcrest:hamcrest:2.2"
     / * Room database * /
     def room_version = "2.4.3"
     implementation "androidx.room:room-runtime:$room_version"
@@ -48,4 +70,6 @@ dependencies {
     def kodein_version = "6.2.1"
     implementation "org.kodein.di:kodein-di-generic-jvm:$kodein_version"
     implementation "org.kodein.di:kodein-di-framework-android-x:$kodein_version"
+    / * SQLite to excel */
+    implementation 'com.ajts.androidmads.SQLite2Excel:library:1.0.2'
 }

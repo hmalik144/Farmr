@@ -51,11 +51,13 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
     private var mDescription: String? = null
     private var mTimeIn: String? = null
     private var mTimeOut: String? = null
-    private var mBreaks = 0
-    private var mUnits = 0f
+    private var mBreaks: Int? = null
+    private var mUnits: Float? = null
     private var mPayRate = 0f
     private var mType: ShiftType? = null
-    private var mDuration: Float = 0f
+    private var mDuration: Float? = null
+
+    private var id: Long? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,7 +99,7 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
             calculateTotalPay()
         }
         mUnitEditText.doAfterTextChanged {
-            it.toString().toFloatOrNull()?.let { u -> mPayRate = u }
+            it.toString().toFloatOrNull()?.let { u -> mUnits = u }
             calculateTotalPay()
         }
         mPayRateEditText.doAfterTextChanged {
@@ -113,6 +115,8 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
     }
 
     private fun setupViewAfterViewCreated() {
+        id = arguments?.getLong(ID)
+
         val title = when (arguments?.containsKey(ID)) {
             true -> {
                 // Since we are editing a shift lets load the shift data into the views
@@ -158,6 +162,7 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
                 hourlyDataView.show()
                 durationHolder.show()
             }
+
             R.id.piecerate -> {
                 mType = ShiftType.PIECE
                 wholeView.show()
@@ -169,27 +174,62 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
     }
 
     private fun submitShift() {
-        mDate.validateField({ !it.isNullOrBlank() }){
+        mDate.validateField({ !it.isNullOrBlank() }) {
             onFailure("Date field cannot be empty")
             return
         }
-        mDescription.validateField({ !it.isNullOrBlank() }){
+        mDescription.validateField({ !it.isNullOrBlank() }) {
             onFailure("Description field cannot be empty")
             return
         }
-        mPayRate.validateField({ !it.isNaN() }){
+        mPayRate.validateField({ !it.isNaN() }) {
             onFailure("Rate of pay field cannot be empty")
             return
         }
 
         if (mPieceRadioButton.isChecked) {
-            mUnits.validateField({!it.isNaN()}) {
+
+            mUnits.validateField({ it != null && it >= 0 }) {
                 onFailure("Units field cannot be empty")
                 return
             }
-            viewModel.insertPieceRateShift(mDescription!!, mDate!!, mUnits, mPayRate)
+            if (id != null) {
+                // update
+                viewModel.updateShift(
+                    id!!,
+                    description = mDescription,
+                    date = mDate,
+                    units = mUnits,
+                    rateOfPay = mPayRate
+                )
+            } else {
+                // insert
+                viewModel.insertPieceRateShift(mDescription!!, mDate!!, mUnits!!, mPayRate)
+            }
         } else if (mHourlyRadioButton.isChecked) {
-            viewModel.insertHourlyShift(mDescription!!, mDate!!, mPayRate, mTimeIn, mTimeOut, mBreaks)
+            if (id != null) {
+                // update
+                viewModel.updateShift(
+                    id!!,
+                    description = mDescription,
+                    date = mDate,
+                    rateOfPay = mPayRate,
+                    timeIn = mTimeIn,
+                    timeOut = mTimeOut,
+                    breakMins = mBreaks
+                )
+            } else {
+                // insert
+                viewModel.insertHourlyShift(
+                    mDescription!!,
+                    mDate!!,
+                    mPayRate,
+                    mTimeIn,
+                    mTimeOut,
+                    mBreaks
+                )
+            }
+
         }
     }
 
@@ -199,11 +239,13 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
                 ShiftType.HOURLY -> {
                     // Calculate duration before total pay calculation
                     mDuration = viewModel.retrieveDurationText(mTimeIn, mTimeOut, mBreaks) ?: return
-                    mDurationTextView.text = StringBuilder().append(mDuration).append(" hours").toString()
-                    mDuration * mPayRate
+                    mDurationTextView.text =
+                        StringBuilder().append(mDuration).append(" hours").toString()
+                    mDuration!! * mPayRate
                 }
+
                 ShiftType.PIECE -> {
-                    mUnits * mPayRate
+                    (mUnits ?: 0f) * mPayRate
                 }
             }
             mTotalPayTextView.text = total.formatToTwoDpString()

@@ -19,7 +19,7 @@ class ShiftApplication: Application(), KodeinAware {
     override val kodein = Kodein.lazy {
         import(androidXModule(this@ShiftApplication))
 
-        bind() from singleton { LegacyDatabase(this@ShiftApplication) }
+        bind() from singleton { LegacyDatabase(contentResolver) }
         bind() from singleton { PreferenceProvider(this@ShiftApplication) }
         bind() from singleton { RepositoryImpl(instance(), instance()) }
 

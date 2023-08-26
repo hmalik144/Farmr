@@ -53,6 +53,6 @@ abstract class BaseActivity<V : BaseViewModel> : AppCompatActivity(), KodeinAwar
     }
 
     fun setTitleInActionBar(title: String) {
-        setTitle(title)
+        supportActionBar?.title = title
     }
 }

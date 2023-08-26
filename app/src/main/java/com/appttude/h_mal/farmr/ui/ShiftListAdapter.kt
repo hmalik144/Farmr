@@ -2,26 +2,36 @@ package com.appttude.h_mal.farmr.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BaseRecyclerAdapter
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.utils.ID
+import com.appttude.h_mal.farmr.utils.generateView
 import com.appttude.h_mal.farmr.utils.navigateToFragment
 
-class ShiftRecyclerAdapter(
+class ShiftListAdapter(
     private val fragment: Fragment,
     private val longPressCallback: (Long) -> Unit
-) : BaseRecyclerAdapter<ShiftObject>(
-    emptyViewId = R.layout.empty_list_view,
-    currentViewId = R.layout.list_item_1
-) {
-    override fun bindCurrentView(view: View, position: Int, data: ShiftObject) {
+) : ListAdapter<ShiftObject, BaseRecyclerAdapter.CurrentViewHolder>(diffCallBack) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): BaseRecyclerAdapter.CurrentViewHolder {
+        val currentViewHolder = parent.generateView(R.layout.list_item_1)
+        return BaseRecyclerAdapter.CurrentViewHolder(currentViewHolder)
+    }
+
+    override fun onBindViewHolder(holder: BaseRecyclerAdapter.CurrentViewHolder, position: Int) {
+        val view = holder.itemView
+        val data = getItem(position)
+
         val descriptionTextView: TextView = view.findViewById(R.id.location)
         val dateTextView: TextView = view.findViewById(R.id.date)
         val totalPay: TextView = view.findViewById(R.id.total_pay)
@@ -89,16 +99,15 @@ class ShiftRecyclerAdapter(
         }
     }
 
-//    override fun getItemId(position: Int): Long {
-//        return if (list.isNullOrEmpty()) {
-//            RecyclerView.NO_ID
-//        } else {
-//            list!![position].id
-//        }
-//
-//    }
-//
-//    override fun setHasStableIds(hasStableIds: Boolean) {
-//        super.setHasStableIds(true)
-//    }
+    companion object {
+        val diffCallBack = object : DiffUtil.ItemCallback<ShiftObject>() {
+            override fun areItemsTheSame(oldItem: ShiftObject, newItem: ShiftObject): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: ShiftObject, newItem: ShiftObject): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 }

@@ -160,7 +160,7 @@ class MainViewModel(
         rateOfPay: Float
     ) {
         // Validate inputs from the edit texts
-        (description.length < 3).validateField {
+        (description.length > 3).validateField {
             onError("Description length should be longer")
             return
         }
@@ -196,11 +196,11 @@ class MainViewModel(
         type: String? = null,
         description: String? = null,
         date: String? = null,
-        rateOfPay: String? = null,
+        rateOfPay: Float? = null,
         timeIn: String? = null,
         timeOut: String? = null,
-        breakMins: String? = null,
-        units: String? = null,
+        breakMins: Int? = null,
+        units: Float? = null,
     ) {
         description?.let {
             (it.length < 3).validateField {
@@ -243,11 +243,11 @@ class MainViewModel(
                 type = type?.let { ShiftType.getEnumByType(it) },
                 description = description,
                 date = date,
-                rateOfPay = rateOfPay?.toFloatOrNull(),
+                rateOfPay = rateOfPay,
                 timeIn = timeIn,
                 timeOut = timeOut,
-                breakMins = breakMins?.toIntOrNull(),
-                units = units?.toFloatOrNull()
+                breakMins = breakMins,
+                units = units
             )
         }
     }
@@ -430,7 +430,7 @@ class MainViewModel(
         return textString
     }
 
-    private fun refreshLiveData() {
+    fun refreshLiveData() {
         _shiftLiveData.postValue(repository.readShiftsFromDatabase())
     }
 
@@ -471,7 +471,7 @@ class MainViewModel(
         return mFilterStore!!
     }
 
-    fun retrieveDurationText(mTimeIn: String?, mTimeOut: String?, mBreaks: Int): Float? {
+    fun retrieveDurationText(mTimeIn: String?, mTimeOut: String?, mBreaks: Int?): Float? {
         try {
             return calculateDuration(mTimeIn,mTimeOut,mBreaks)
         }catch (e: IOException) {

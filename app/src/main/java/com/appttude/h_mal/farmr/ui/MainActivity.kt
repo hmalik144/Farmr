@@ -22,10 +22,6 @@ import kotlin.system.exitProcess
 class MainActivity : BaseActivity<MainViewModel>() {
     private lateinit var toolbar: Toolbar
 
-    var selection: String? = null
-    var args: Array<String>? = null
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_view)
@@ -55,11 +51,6 @@ class MainActivity : BaseActivity<MainViewModel>() {
                 super.onBackPressed()
             }
         }
-    }
-
-
-    fun setActionBarTitle(title: String?) {
-        toolbar.title = title
     }
 
     // Storage Permissions

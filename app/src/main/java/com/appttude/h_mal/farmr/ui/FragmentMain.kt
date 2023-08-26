@@ -27,7 +27,7 @@ import kotlin.system.exitProcess
 class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPressedListener {
     lateinit var activity: MainActivity
     private lateinit var productListView: RecyclerView
-    private lateinit var mAdapter: ShiftRecyclerAdapter
+    private lateinit var mAdapter: ShiftListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +38,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mAdapter = ShiftRecyclerAdapter(this) {
+        mAdapter = ShiftListAdapter(this) {
             viewModel.deleteShift(it)
         }
         productListView = view.findViewById(R.id.list_item_view)
@@ -49,10 +49,16 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.refreshLiveData()
+    }
+
     override fun onSuccess(data: Any?) {
         super.onSuccess(data)
         if (data is List<*>) {
-            mAdapter.updateData(data as List<ShiftObject>)
+            mAdapter.submitList(data as List<ShiftObject>)
         }
     }
 

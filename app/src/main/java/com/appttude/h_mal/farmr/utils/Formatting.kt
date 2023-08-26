@@ -20,11 +20,11 @@ fun Float.formatToTwoDpString(): String {
 }
 
 fun String.dateStringIsValid(): Boolean {
-    return DATE_FORMAT.toPattern().matcher(this).matches()
+    return "([0-9]{4})-([0-9]{2})-([0-9]{2})".toPattern().matcher(this).matches()
 }
 
 fun String.timeStringIsValid(): Boolean {
-    return TIME_FORMAT.toPattern().matcher(this).matches()
+    return "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\$".toPattern().matcher(this).matches()
 }
 
 fun Calendar.getTimeString(): String {

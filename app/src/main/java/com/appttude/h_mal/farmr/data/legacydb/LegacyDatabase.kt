@@ -1,5 +1,6 @@
 package com.appttude.h_mal.farmr.data.legacydb
 
+import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
@@ -20,8 +21,7 @@ import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry._ID
 import com.appttude.h_mal.farmr.model.Shift
 import com.appttude.h_mal.farmr.model.ShiftType
 
-class LegacyDatabase(context: Context) {
-    private val resolver = context.contentResolver
+class LegacyDatabase(private val resolver: ContentResolver) {
 
     private val projection = arrayOf<String?>(
         _ID,
@@ -44,7 +44,7 @@ class LegacyDatabase(context: Context) {
         val values = ContentValues().apply {
             put(COLUMN_SHIFT_TYPE, shift.type.type)
             put(COLUMN_SHIFT_DESCRIPTION, shift.description)
-            put(COLUMN_SHIFT_DATE, shift.description)
+            put(COLUMN_SHIFT_DATE, shift.date)
             put(COLUMN_SHIFT_TIME_IN, shift.timeIn ?: "00:00")
             put(COLUMN_SHIFT_TIME_OUT, shift.timeOut ?: "00:00")
             put(COLUMN_SHIFT_DURATION, shift.duration ?: 0.00f)
@@ -63,8 +63,9 @@ class LegacyDatabase(context: Context) {
             projection,
             null, null, null
         ) ?: return null
-        cursor.moveToFirst()
-        val shifts = (0..cursor.count).map { cursor.getShift() }
+        val shifts = generateSequence { if (cursor.moveToNext()) cursor else null }
+            .map { it.getShift() }
+            .toList()
         // close cursor after query operations
         cursor.close()
 

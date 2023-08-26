@@ -173,5 +173,7 @@ fun EditText.setDatePicker(onSelected: (String) -> Unit) {
         }, mYear, mMonth, mDay
     )
     mDatePicker.setTitle("Select date")
-    mDatePicker.show()
+    setOnClickListener {
+        mDatePicker.show()
+    }
 }

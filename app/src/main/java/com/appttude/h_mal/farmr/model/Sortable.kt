@@ -7,5 +7,9 @@ enum class Sortable(val label: String) {
     DESCRIPTION("Description"),
     DURATION("Added"), UNITS("Duration"),
     RATEOFPAY("Rate of pay"),
-    TOTALPAY("Total Pay")
+    TOTALPAY("Total Pay");
+
+    companion object {
+        val entries = Sortable.values()
+    }
 }

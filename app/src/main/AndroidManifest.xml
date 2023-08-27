@@ -37,6 +37,16 @@
             android:name="com.appttude.h_mal.farmr.data.legacydb.ShiftProvider"
             android:authorities="com.appttude.h_mal.farmr"
             android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.appttude.h_mal.farmr.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_path" />
+        </provider>
     </application>
 
 </manifest>

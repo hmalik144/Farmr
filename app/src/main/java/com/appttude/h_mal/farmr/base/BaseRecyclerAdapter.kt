@@ -13,11 +13,6 @@ open class BaseRecyclerAdapter<T: Any>(
 ): RecyclerView.Adapter<ViewHolder>()  {
     var list: List<T>? = null
 
-    fun updateData(newList: List<T>) {
-        list = newList
-        notifyDataSetChanged()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return if (list.isNullOrEmpty()) {
             val emptyViewHolder = parent.generateView(emptyViewId)

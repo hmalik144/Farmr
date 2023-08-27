@@ -74,8 +74,8 @@ class FilterDataFragment : BaseFragment<MainViewModel>(R.layout.fragment_filter_
         id: Long
     ) {
         type = when (position) {
-            1 -> ShiftType.HOURLY.toString()
-            2 -> ShiftType.PIECE.toString()
+            1 -> ShiftType.HOURLY.type
+            2 -> ShiftType.PIECE.type
             else -> return
         }
     }

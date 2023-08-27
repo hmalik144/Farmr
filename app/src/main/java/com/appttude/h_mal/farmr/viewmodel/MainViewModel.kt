@@ -522,6 +522,7 @@ class MainViewModel(
     ) {
         repository.setFilteringDetailsInPrefs(description, dateFrom, dateTo, type)
         onSuccess(Success("Filter(s) successfully applied"))
+        refreshLiveData()
     }
 
     fun getFiltrationDetails(): FilterStore {
@@ -568,11 +569,12 @@ class MainViewModel(
                 Label(10, 0, COLUMN_SHIFT_TOTALPAY)
             )
             // table content
-            val data = shiftLiveData.value
-            if (data.isNullOrEmpty()) {
+            if (shiftLiveData.value.isNullOrEmpty()) {
                 onError("No data to parse into excel file")
                 return null
             }
+            val sortAndOrder = getSortAndOrder()
+            val data = shiftLiveData.value!!.applyFilters().sortList(sortAndOrder.first, sortAndOrder.second)
             var currentRow = 0
             val cells = data.mapIndexed { index, shift ->
                 currentRow += 1

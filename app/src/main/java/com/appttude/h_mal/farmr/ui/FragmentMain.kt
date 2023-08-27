@@ -14,14 +14,19 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BackPressedListener
 import com.appttude.h_mal.farmr.base.BaseFragment
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.Sortable
+import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.createDialog
+import com.appttude.h_mal.farmr.utils.displayToast
+import com.appttude.h_mal.farmr.utils.hide
 import com.appttude.h_mal.farmr.utils.navigateToFragment
+import com.appttude.h_mal.farmr.utils.show
 import com.appttude.h_mal.farmr.viewmodel.MainViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
@@ -30,6 +35,7 @@ import kotlin.system.exitProcess
 
 class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPressedListener {
     private lateinit var productListView: RecyclerView
+    private lateinit var emptyView: View
     private lateinit var mAdapter: ShiftListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +53,15 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
         }
         productListView = view.findViewById(R.id.list_item_view)
         productListView.adapter = mAdapter
+        emptyView  = view.findViewById(R.id.empty_view)
+
+        mAdapter.registerAdapterDataObserver(object : AdapterDataObserver() {
+            override fun onChanged() {
+                super.onChanged()
+                if (mAdapter.itemCount == 0) emptyView.show()
+                else emptyView.hide()
+            }
+        })
 
         view.findViewById<FloatingActionButton>(R.id.fab1).setOnClickListener {
             navigateToFragment(FragmentAddItem(), name = "additem")
@@ -64,6 +79,9 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
         if (data is List<*>) {
             @Suppress("UNCHECKED_CAST")
             mAdapter.submitList(data as List<ShiftObject>)
+        }
+        if (data is Success) {
+            displayToast(data.successMessage)
         }
     }
 

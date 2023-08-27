@@ -3,6 +3,7 @@ package com.appttude.h_mal.farmr.utils
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 fun String.formatToTwoDp(): Float {
@@ -30,6 +31,11 @@ fun String.timeStringIsValid(): Boolean {
 fun Calendar.getTimeString(): String {
     val format = SimpleDateFormat(TIME_FORMAT, Locale.getDefault())
     return format.format(time)
+}
+
+fun String.convertDateString(format: String = DATE_FORMAT): Date? {
+    val formatter = SimpleDateFormat(format, Locale.getDefault())
+    return formatter.parse(this)
 }
 
 /**

@@ -1,11 +1,26 @@
 package com.appttude.h_mal.farmr.viewmodel
 
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.os.Build
+import android.os.Environment
+import androidx.annotation.RequiresPermission
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.appttude.h_mal.farmr.base.BaseViewModel
 import com.appttude.h_mal.farmr.data.Repository
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_BREAK
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_DATE
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_DESCRIPTION
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_DURATION
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_PAYRATE
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TIME_IN
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TIME_OUT
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TOTALPAY
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TYPE
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_UNIT
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry._ID
 import com.appttude.h_mal.farmr.data.prefs.DESCRIPTION
 import com.appttude.h_mal.farmr.data.prefs.TIME_IN
 import com.appttude.h_mal.farmr.data.prefs.TIME_OUT
@@ -15,14 +30,24 @@ import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.Shift
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Sortable
+import com.appttude.h_mal.farmr.model.Success
+import com.appttude.h_mal.farmr.utils.CURRENCY
 import com.appttude.h_mal.farmr.utils.calculateDuration
+import com.appttude.h_mal.farmr.utils.convertDateString
 import com.appttude.h_mal.farmr.utils.dateStringIsValid
 import com.appttude.h_mal.farmr.utils.formatToTwoDp
 import com.appttude.h_mal.farmr.utils.getTimeString
 import com.appttude.h_mal.farmr.utils.sortedByOrder
 import com.appttude.h_mal.farmr.utils.timeStringIsValid
+import jxl.Workbook
+import jxl.WorkbookSettings
+import jxl.write.Label
+import jxl.write.WritableWorkbook
+import jxl.write.WriteException
+import java.io.File
 import java.io.IOException
 import java.util.Calendar
+import java.util.Locale
 
 
 class MainViewModel(
@@ -38,7 +63,8 @@ class MainViewModel(
     private var mFilterStore: FilterStore? = null
 
     private val observer = Observer<List<ShiftObject>> {
-        onSuccess(it.sortList(mSort, mOrder))
+        val result = it.applyFilters().sortList(mSort, mOrder)
+        onSuccess(result)
     }
 
     init {
@@ -46,6 +72,47 @@ class MainViewModel(
         refreshLiveData()
         shiftLiveData.observeForever(observer)
     }
+
+    private fun List<ShiftObject>.applyFilters(): List<ShiftObject> {
+        val filter = getFiltrationDetails()
+
+        return filter { s ->
+            comparedStrings(filter.type, s.type) &&
+                    comparedStringsContains(filter.description, s.description) &&
+                    (isBetween(filter.dateFrom, filter.dateTo, s.date) ?: true)
+        }
+    }
+
+    private fun comparedStrings(first: String?, second: String?): Boolean {
+        return when (compareValues(first, second)) {
+            -1, 0, 1 -> true
+            else -> {
+                false
+            }
+        }
+    }
+
+    private fun comparedStringsContains(first: String?, second: String?): Boolean {
+        first?.let {
+            (second?.contains(it))?.let { c -> return c }
+        }
+
+        return comparedStrings(first, second)
+    }
+
+    private fun isBetween(fromDate: String?, toDate: String?, compareWith: String): Boolean? {
+        val first = fromDate?.convertDateString()
+        val second = toDate?.convertDateString()
+
+        if (first == null && second == null) return null
+        val compareDate = compareWith.convertDateString() ?: return null
+
+        if (second == null) return compareDate.after(first)
+        if (first == null) return compareDate.before(second)
+
+        return compareDate.after(first) && compareDate.before(second)
+    }
+
 
     override fun onCleared() {
         shiftLiveData.removeObserver(observer)
@@ -121,7 +188,7 @@ class MainViewModel(
             onError("Date format is invalid")
             return
         }
-        (rateOfPay.toFloat() >= 0.00).validateField {
+        (rateOfPay >= 0.00).validateField {
             onError("Rate of pay is invalid")
             return
         }
@@ -139,7 +206,7 @@ class MainViewModel(
         }
 
         doTry {
-            insertShiftIntoDatabase(
+            val result = insertShiftIntoDatabase(
                 ShiftType.HOURLY,
                 description,
                 date,
@@ -149,6 +216,8 @@ class MainViewModel(
                 breakMins,
                 null
             )
+
+            if (result) onSuccess(Success("Shift successfully added"))
         }
 
     }
@@ -178,7 +247,7 @@ class MainViewModel(
         }
 
         doTry {
-            insertShiftIntoDatabase(
+            val result = insertShiftIntoDatabase(
                 type = ShiftType.PIECE,
                 description = description,
                 date = date,
@@ -188,6 +257,7 @@ class MainViewModel(
                 null,
                 units = units
             )
+            if (result) onSuccess(Success("New shift successfully added"))
         }
     }
 
@@ -203,7 +273,7 @@ class MainViewModel(
         units: Float? = null,
     ) {
         description?.let {
-            (it.length < 3).validateField {
+            (it.length > 3).validateField {
                 onError("Description length should be longer")
                 return
             }
@@ -213,7 +283,7 @@ class MainViewModel(
             return
         }
         rateOfPay?.let {
-            (it.toFloat() >= 0.00).validateField {
+            (it >= 0.00).validateField {
                 onError("Rate of pay is invalid")
                 return
             }
@@ -232,13 +302,13 @@ class MainViewModel(
             onError("Time out format is in correct")
             return
         }
-        breakMins?.let { it.toInt() > 0 }?.validateField {
+        breakMins?.let { it >= 0 }?.validateField {
             onError("Break in minutes is invalid")
             return
         }
 
         doTry {
-            updateShiftInDatabase(
+            val result = updateShiftInDatabase(
                 id,
                 type = type?.let { ShiftType.getEnumByType(it) },
                 description = description,
@@ -249,6 +319,8 @@ class MainViewModel(
                 breakMins = breakMins,
                 units = units
             )
+
+            if (result) onSuccess(Success("Shift successfully updated"))
         }
     }
 
@@ -278,7 +350,7 @@ class MainViewModel(
         timeOut: String? = null,
         breakMins: Int? = null,
         units: Float? = null,
-    ) {
+    ): Boolean {
         val currentShift = repository.readSingleShiftFromDatabase(id)?.copyToShift()
             ?: throw IOException("Cannot update shift as it does not exist")
 
@@ -352,7 +424,7 @@ class MainViewModel(
             }
         }
 
-        repository.updateShiftIntoDatabase(id, shift)
+        return repository.updateShiftIntoDatabase(id, shift)
     }
 
     private fun insertShiftIntoDatabase(
@@ -364,7 +436,7 @@ class MainViewModel(
         timeOut: String?,
         breakMins: Int?,
         units: Float?,
-    ) {
+    ): Boolean {
         val shift = when (type) {
             ShiftType.HOURLY -> {
                 if (timeIn.isNullOrBlank() && timeOut.isNullOrBlank()) throw IOException("Time in and time out are null")
@@ -392,7 +464,7 @@ class MainViewModel(
             }
         }
 
-        repository.insertShiftIntoDatabase(shift)
+        return repository.insertShiftIntoDatabase(shift)
     }
 
 
@@ -404,30 +476,21 @@ class MainViewModel(
         totalPay: Float,
         lines: Int
     ): String {
-        var textString: String
-        textString = "$lines Shifts"
+        val stringBuilder = StringBuilder("$lines Shifts").append("\n")
+
         if (countOfHourly != 0 && countOfPiece != 0) {
-            textString = "$textString ($countOfHourly Hourly/$countOfPiece Piece Rate)"
+            stringBuilder.append(" ($countOfHourly Hourly/$countOfPiece Piece Rate)").append("\n")
         }
         if (countOfHourly != 0) {
-            textString = """
-                $textString
-                Total Hours: ${String.format("%.2f", totalDuration)}
-                """.trimIndent()
+            stringBuilder.append("Total Hours: ").append(totalDuration).append("\n")
         }
         if (countOfPiece != 0) {
-            textString = """
-                $textString
-                Total Units: ${String.format("%.2f", totalUnits)}
-                """.trimIndent()
+            stringBuilder.append("Total Units: ").append(totalUnits).append("\n")
         }
         if (totalPay != 0f) {
-            textString = """
-                $textString
-                Total Pay: ${"$"}${String.format("%.2f", totalPay)}
-                """.trimIndent()
+            stringBuilder.append("Total Pay: ").append(CURRENCY).append(totalPay).append("\n")
         }
-        return textString
+        return stringBuilder.toString()
     }
 
     fun refreshLiveData() {
@@ -458,11 +521,12 @@ class MainViewModel(
         type: String?
     ) {
         repository.setFilteringDetailsInPrefs(description, dateFrom, dateTo, type)
+        onSuccess(Success("Filter(s) successfully applied"))
     }
 
     fun getFiltrationDetails(): FilterStore {
         val prefs = repository.retrieveFilteringDetailsInPrefs()
-        mFilterStore =  FilterStore(
+        mFilterStore = FilterStore(
             prefs[DESCRIPTION],
             prefs[TIME_IN],
             prefs[TIME_OUT],
@@ -473,9 +537,87 @@ class MainViewModel(
 
     fun retrieveDurationText(mTimeIn: String?, mTimeOut: String?, mBreaks: Int?): Float? {
         try {
-            return calculateDuration(mTimeIn,mTimeOut,mBreaks)
-        }catch (e: IOException) {
+            return calculateDuration(mTimeIn, mTimeOut, mBreaks)
+        } catch (e: IOException) {
             onError(e)
+        }
+        return null
+    }
+
+    @RequiresPermission(WRITE_EXTERNAL_STORAGE)
+    fun createExcelSheet(file: File): File? {
+        val wbSettings = WorkbookSettings().apply {
+            locale = Locale("en", "EN")
+        }
+
+        try {
+            val workbook: WritableWorkbook = Workbook.createWorkbook(file, wbSettings)
+            val sheet = workbook.createSheet("Shifts", 0)
+            // Write column headers
+            val headers = listOf(
+                Label(0, 0, _ID),
+                Label(1, 0, COLUMN_SHIFT_TYPE),
+                Label(2, 0, COLUMN_SHIFT_DESCRIPTION),
+                Label(3, 0, COLUMN_SHIFT_DATE),
+                Label(4, 0, COLUMN_SHIFT_TIME_IN),
+                Label(5, 0, COLUMN_SHIFT_TIME_OUT),
+                Label(6, 0, "$COLUMN_SHIFT_BREAK (in mins)"),
+                Label(7, 0, COLUMN_SHIFT_DURATION),
+                Label(8, 0, COLUMN_SHIFT_UNIT),
+                Label(9, 0, COLUMN_SHIFT_PAYRATE),
+                Label(10, 0, COLUMN_SHIFT_TOTALPAY)
+            )
+            // table content
+            val data = shiftLiveData.value
+            if (data.isNullOrEmpty()) {
+                onError("No data to parse into excel file")
+                return null
+            }
+            var currentRow = 0
+            val cells = data.mapIndexed { index, shift ->
+                currentRow += 1
+                listOf(
+                    Label(0, currentRow, shift.id.toString()),
+                    Label(1, currentRow, shift.type),
+                    Label(2, currentRow, shift.description),
+                    Label(3, currentRow, shift.date),
+                    Label(4, currentRow, shift.timeIn),
+                    Label(5, currentRow, shift.timeOut),
+                    Label(6, currentRow, shift.breakMins.toString()),
+                    Label(7, currentRow, shift.duration.toString()),
+                    Label(8, currentRow, shift.units.toString()),
+                    Label(9, currentRow, shift.rateOfPay.toString()),
+                    Label(10, currentRow, shift.totalPay.toString())
+                )
+            }.flatten()
+
+            currentRow += 1
+            val footer = listOf(
+                Label(0, currentRow, "Total:"),
+                Label(7, currentRow, data.sumOf { it.duration.toDouble() }.toString()),
+                Label(8, currentRow, data.sumOf { it.units.toDouble() }.toString()),
+                Label(10, currentRow, data.sumOf { it.totalPay.toDouble() }.toString())
+            )
+            val content = listOf(headers, cells, footer).flatten()
+
+            // Write content to sheet
+            try {
+                content.forEach { c -> sheet.addCell(c) }
+            } catch (e: WriteException) {
+                onError("Failed to write excel sheet")
+                return null
+            } catch (e: WriteException) {
+                onError("Failed to write excel sheet")
+                return null
+            }
+
+            workbook.write()
+            workbook.close()
+
+            return file
+        } catch (e: IOException) {
+            e.printStackTrace()
+            onError("Failed to generate excel sheet of shifts")
         }
         return null
     }

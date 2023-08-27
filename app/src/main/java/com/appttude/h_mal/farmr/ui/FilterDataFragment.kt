@@ -12,6 +12,7 @@ import androidx.core.widget.doAfterTextChanged
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BaseFragment
 import com.appttude.h_mal.farmr.model.ShiftType
+import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.setDatePicker
 import com.appttude.h_mal.farmr.viewmodel.MainViewModel
 
@@ -32,7 +33,6 @@ class FilterDataFragment : BaseFragment<MainViewModel>(R.layout.fragment_filter_
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setTitle(getString(R.string.title_activity_filter_data))
 
         LocationET = view.findViewById(R.id.filterLocationEditText)
@@ -88,5 +88,10 @@ class FilterDataFragment : BaseFragment<MainViewModel>(R.layout.fragment_filter_
 
     override fun onClick(p0: View?) {
         submitFiltrationDetails()
+    }
+
+    override fun onSuccess(data: Any?) {
+        super.onSuccess(data)
+        if (data is Success) popBackStack()
     }
 }

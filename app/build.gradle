@@ -44,7 +44,7 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.4.0'
     / * mockito and livedata testing * /
     testImplementation 'org.mockito:mockito-inline:2.13.0'
-    implementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
     / * MockK * /
     def mockk_ver = "1.10.5"
     testImplementation "io.mockk:mockk:$mockk_ver"

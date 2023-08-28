@@ -14,9 +14,9 @@ import com.appttude.h_mal.farmr.base.BaseFragment
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.setDatePicker
-import com.appttude.h_mal.farmr.viewmodel.MainViewModel
+import com.appttude.h_mal.farmr.viewmodel.FilterViewModel
 
-class FilterDataFragment : BaseFragment<MainViewModel>(R.layout.fragment_filter_data),
+class FilterDataFragment : BaseFragment<FilterViewModel>(R.layout.fragment_filter_data),
     AdapterView.OnItemSelectedListener, OnClickListener {
     private val spinnerList: Array<String> =
         arrayOf("", ShiftType.HOURLY.type, ShiftType.PIECE.type)
@@ -26,10 +26,10 @@ class FilterDataFragment : BaseFragment<MainViewModel>(R.layout.fragment_filter_
     private lateinit var dateToET: EditText
     private lateinit var typeSpinner: Spinner
 
-    private var description: String? = null
-    private var dateFrom: String? = null
-    private var dateTo: String? = null
-    private var type: String? = null
+    private var descriptionString: String? = null
+    private var dateFromString: String? = null
+    private var dateToString: String? = null
+    private var typeString: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,21 +47,29 @@ class FilterDataFragment : BaseFragment<MainViewModel>(R.layout.fragment_filter_
 
         val filterDetails = viewModel.getFiltrationDetails()
 
-        filterDetails.let {
-            LocationET.setText(it.description)
-            dateFromET.setText(it.dateFrom)
-            dateToET.setText(it.dateTo)
-
-            it.type?.let { t ->
-                val spinnerPosition: Int = adapter.getPosition(t)
+        filterDetails.run {
+            description?.let {
+                LocationET.setText(it)
+                descriptionString = it
+            }
+            dateFrom?.let {
+                dateFromET.setText(it)
+                dateFromString = it
+            }
+            dateTo?.let {
+                dateToET.setText(it)
+                dateToString = it
+            }
+            type?.let {
+                typeString = it
+                val spinnerPosition: Int = adapter.getPosition(it)
                 typeSpinner.setSelection(spinnerPosition)
             }
-
         }
 
-        LocationET.doAfterTextChanged { description = it.toString() }
-        dateFromET.setDatePicker { dateFrom = it }
-        dateToET.setDatePicker { dateTo = it }
+        LocationET.doAfterTextChanged { descriptionString = it.toString() }
+        dateFromET.setDatePicker { dateFromString = it }
+        dateToET.setDatePicker { dateToString = it }
         typeSpinner.onItemSelectedListener = this
 
         submit.setOnClickListener(this)
@@ -73,7 +81,7 @@ class FilterDataFragment : BaseFragment<MainViewModel>(R.layout.fragment_filter_
         position: Int,
         id: Long
     ) {
-        type = when (position) {
+        typeString = when (position) {
             1 -> ShiftType.HOURLY.type
             2 -> ShiftType.PIECE.type
             else -> return
@@ -83,7 +91,7 @@ class FilterDataFragment : BaseFragment<MainViewModel>(R.layout.fragment_filter_
     override fun onNothingSelected(parentView: AdapterView<*>?) {}
 
     private fun submitFiltrationDetails() {
-        viewModel.setFiltrationDetails(description, dateFrom, dateTo, type)
+        viewModel.applyFilters(descriptionString, dateFromString, dateToString, typeString)
     }
 
     override fun onClick(p0: View?) {

@@ -70,7 +70,6 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
 
     override fun onStart() {
         super.onStart()
-
         viewModel.refreshLiveData()
     }
 
@@ -112,7 +111,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
             }
 
             R.id.clear_filter -> {
-                viewModel.setFiltrationDetails(null, null, null, null)
+                viewModel.clearFilters()
                 return true
             }
 

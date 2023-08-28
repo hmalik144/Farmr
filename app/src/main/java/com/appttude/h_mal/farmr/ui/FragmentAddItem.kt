@@ -26,8 +26,9 @@ import com.appttude.h_mal.farmr.utils.setTimePicker
 import com.appttude.h_mal.farmr.utils.show
 import com.appttude.h_mal.farmr.utils.validateField
 import com.appttude.h_mal.farmr.viewmodel.MainViewModel
+import com.appttude.h_mal.farmr.viewmodel.SubmissionViewModel
 
-class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
+class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_item),
     RadioGroup.OnCheckedChangeListener, BackPressedListener {
 
     private lateinit var mHourlyRadioButton: RadioButton
@@ -262,7 +263,6 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
                         StringBuilder().append(mDuration).append(" hours").toString()
                     mDuration!! * mPayRate
                 }
-
                 ShiftType.PIECE -> {
                     (mUnits ?: 0f) * mPayRate
                 }

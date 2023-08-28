@@ -19,7 +19,7 @@ import com.appttude.h_mal.farmr.utils.popBackStack
 import com.appttude.h_mal.farmr.viewmodel.MainViewModel
 import kotlin.system.exitProcess
 
-class MainActivity : BaseActivity<MainViewModel>() {
+class MainActivity : BaseActivity() {
     private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {

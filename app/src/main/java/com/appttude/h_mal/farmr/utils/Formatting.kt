@@ -1,8 +1,10 @@
 package com.appttude.h_mal.farmr.utils
 
 import java.io.IOException
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Currency
 import java.util.Date
 import java.util.Locale
 
@@ -14,6 +16,14 @@ fun String.formatToTwoDp(): Float {
 fun Float.formatToTwoDp(): Float {
     val formattedString = String.format("%.2f", this)
     return formattedString.toFloat()
+}
+
+fun Float.formatAsCurrencyString(): String? {
+    val format: NumberFormat = NumberFormat.getCurrencyInstance()
+    format.maximumFractionDigits = 2
+    format.currency = Currency.getInstance("GBP")
+
+    return format.format(this)
 }
 
 fun Float.formatToTwoDpString(): String {

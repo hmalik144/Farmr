@@ -5,11 +5,13 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.createViewModelLazy
+import androidx.lifecycle.ViewModelLazy
 import com.appttude.h_mal.farmr.model.ViewState
 import com.appttude.h_mal.farmr.utils.getGenericClassAt
 import com.appttude.h_mal.farmr.utils.popBackStack
 import com.appttude.h_mal.farmr.viewmodel.ApplicationViewModelFactory
 import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import kotlin.properties.Delegates
@@ -21,14 +23,13 @@ abstract class BaseFragment<V : BaseViewModel>(@LayoutRes contentLayoutId: Int) 
     override val kodein by kodein()
     private val factory by instance<ApplicationViewModelFactory>()
 
-    val viewModel: V by getActivityViewModel()
+    val viewModel: V by getViewModel()
 
-    private fun getActivityViewModel() = createViewModelLazy<V>(
-        getGenericClassAt(0),
-        { requireActivity().viewModelStore },
-        { factory })
+    private fun getViewModel(): Lazy<V> =
+        ViewModelLazy(getGenericClassAt(0), storeProducer = { viewModelStore },
+            factoryProducer = { factory } )
 
-    var mActivity: BaseActivity<*>? = null
+    var mActivity: BaseActivity? = null
 
     private var shortAnimationDuration by Delegates.notNull<Int>()
 
@@ -39,7 +40,7 @@ abstract class BaseFragment<V : BaseViewModel>(@LayoutRes contentLayoutId: Int) 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mActivity = requireActivity() as BaseActivity<*>
+        mActivity = requireActivity() as BaseActivity
         configureObserver()
     }
 
@@ -75,7 +76,7 @@ abstract class BaseFragment<V : BaseViewModel>(@LayoutRes contentLayoutId: Int) 
     }
 
     fun setTitle(title: String) {
-        (requireActivity() as BaseActivity<*>).setTitleInActionBar(title)
+        (requireActivity() as BaseActivity).setTitleInActionBar(title)
     }
 
     fun popBackStack() = mActivity?.popBackStack()

@@ -70,6 +70,6 @@ dependencies {
     def kodein_version = "6.2.1"
     implementation "org.kodein.di:kodein-di-generic-jvm:$kodein_version"
     implementation "org.kodein.di:kodein-di-framework-android-x:$kodein_version"
-    / * SQLite to excel */
-    implementation 'com.ajts.androidmads.SQLite2Excel:library:1.0.2'
+    / * jxl * /
+    implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
 }

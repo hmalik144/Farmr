@@ -14,8 +14,10 @@ import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BackPressedListener
 import com.appttude.h_mal.farmr.base.BaseFragment
 import com.appttude.h_mal.farmr.model.ShiftType
+import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.ID
 import com.appttude.h_mal.farmr.utils.createDialog
+import com.appttude.h_mal.farmr.utils.displayToast
 import com.appttude.h_mal.farmr.utils.formatToTwoDpString
 import com.appttude.h_mal.farmr.utils.hide
 import com.appttude.h_mal.farmr.utils.popBackStack
@@ -123,6 +125,13 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
                 viewModel.getCurrentShift(arguments!!.getLong(ID))?.run {
                     mLocationEditText.setText(description)
                     mDateEditText.setText(date)
+
+                    // Set types
+                    mType = ShiftType.getEnumByType(type)
+                    mDescription = description
+                    mDate = date
+                    mPayRate = rateOfPay
+
                     when (ShiftType.getEnumByType(type)) {
                         ShiftType.HOURLY -> {
                             mHourlyRadioButton.isChecked = true
@@ -132,16 +141,26 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
                             mBreakEditText.setText(breakMins.toString())
                             val durationText = "${duration.formatToTwoDpString()} Hours"
                             mDurationTextView.text = durationText
+
+                            // Set fields
+                            mTimeIn = timeIn
+                            mTimeOut = timeOut
+                            mBreaks = breakMins
                         }
 
                         ShiftType.PIECE -> {
                             mHourlyRadioButton.isChecked = false
                             mPieceRadioButton.isChecked = true
                             mUnitEditText.setText(units.formatToTwoDpString())
+
+                            // Set piece rate units
+                            mUnits = units
                         }
                     }
                     mPayRateEditText.setText(rateOfPay.formatToTwoDpString())
                     mTotalPayTextView.text = totalPay.formatToTwoDpString()
+
+                    calculateTotalPay()
                 }
 
                 // Return title
@@ -268,4 +287,11 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
         return true
     }
 
+    override fun onSuccess(data: Any?) {
+        super.onSuccess(data)
+        if (data is Success) {
+            displayToast(data.successMessage)
+            popBackStack()
+        }
+    }
 }

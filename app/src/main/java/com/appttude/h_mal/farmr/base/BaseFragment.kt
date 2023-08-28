@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.createViewModelLazy
 import com.appttude.h_mal.farmr.model.ViewState
 import com.appttude.h_mal.farmr.utils.getGenericClassAt
+import com.appttude.h_mal.farmr.utils.popBackStack
 import com.appttude.h_mal.farmr.viewmodel.ApplicationViewModelFactory
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -76,4 +77,6 @@ abstract class BaseFragment<V : BaseViewModel>(@LayoutRes contentLayoutId: Int) 
     fun setTitle(title: String) {
         (requireActivity() as BaseActivity<*>).setTitleInActionBar(title)
     }
+
+    fun popBackStack() = mActivity?.popBackStack()
 }

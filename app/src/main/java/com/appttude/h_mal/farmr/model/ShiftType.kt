@@ -4,10 +4,6 @@ enum class ShiftType(val type: String){
     HOURLY("Hourly"),
     PIECE("Piece Rate");
 
-    fun getEnumByType(type: String): ShiftType {
-        return values().first { it.type == type }
-    }
-
     companion object {
         fun getEnumByType(type: String): ShiftType {
             return values().first { it.type == type }

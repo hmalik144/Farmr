@@ -39,7 +39,7 @@ data class Shift(
                 timeOut,
                 duration,
                 breakTime,
-                duration,
+                0f,
                 rateOfPay,
                 (duration * rateOfPay).formatToTwoDp()
             )

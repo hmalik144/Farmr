@@ -14,8 +14,8 @@ android {
         applicationId "com.appttude.h_mal.farmr"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
         testInstrumentationRunner 'com.appttude.h_mal.farmr.application.TestRunner'
         vectorDrawables.useSupportLibrary = true
     }

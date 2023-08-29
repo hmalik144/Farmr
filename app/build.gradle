@@ -2,6 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'kotlin-kapt'
 
+def relStorePassword = System.getenv("RELEASE_STORE_PASSWORD")
+def relKeyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+def relKeyAlias = System.getenv("RELEASE_KEY_ALIAS")
+
+def keystorePath = System.getenv('PWD') + "/app/keystore.jks"
+def keystore = file(keystorePath).exists() ? file(keystorePath) : null
 android {
     compileSdkVersion 31
     defaultConfig {
@@ -13,8 +19,17 @@ android {
         testInstrumentationRunner 'com.appttude.h_mal.farmr.application.TestRunner'
         vectorDrawables.useSupportLibrary = true
     }
+    signingConfigs {
+        release {
+            storePassword relStorePassword
+            keyPassword relKeyPassword
+            keyAlias relKeyAlias
+            storeFile keystore
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

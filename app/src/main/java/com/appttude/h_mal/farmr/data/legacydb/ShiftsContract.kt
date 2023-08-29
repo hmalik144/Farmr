@@ -9,7 +9,7 @@ import com.appttude.h_mal.farmr.BuildConfig
  * Created by h_mal on 26/12/2017.
  */
 object ShiftsContract {
-    const val CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID
+    const val CONTENT_AUTHORITY = "com.appttude.h_mal.farmr"
     val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")
     const val PATH_SHIFTS = "shifts"
 

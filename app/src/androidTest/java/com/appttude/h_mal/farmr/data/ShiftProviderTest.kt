@@ -3,21 +3,23 @@ package com.appttude.h_mal.farmr.data
 import android.content.ContentResolver
 import android.content.ContentValues
 import androidx.test.rule.provider.ProviderTestRule
-import com.appttude.h_mal.farmr.data.ShiftsContract.CONTENT_AUTHORITY
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_BREAK
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_DATE
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_DESCRIPTION
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_DURATION
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_PAYRATE
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TIME_IN
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TIME_OUT
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TOTALPAY
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TYPE
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_UNIT
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry.CONTENT_URI
-import com.appttude.h_mal.farmr.data.ShiftsContract.ShiftsEntry._ID
+import com.appttude.h_mal.farmr.data.legacydb.ShiftProvider
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.CONTENT_AUTHORITY
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_BREAK
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_DATE
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_DESCRIPTION
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_DURATION
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_PAYRATE
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TIME_IN
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TIME_OUT
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TOTALPAY
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TYPE
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_UNIT
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.CONTENT_URI
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry._ID
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 
@@ -29,6 +31,11 @@ class ShiftProviderTest {
 
     private val contentResolver: ContentResolver
         get() = providerRule.resolver
+
+    @After
+    fun tearDown() {
+        contentResolver.delete(CONTENT_URI, null, null)
+    }
 
     @Test
     fun insertEntry_queryEntry_assertEntry() {
@@ -75,6 +82,8 @@ class ShiftProviderTest {
         // Assert
         val item = contentResolver.query(CONTENT_URI, projection, null, null, null)
         item?.takeIf { it.moveToNext() }?.run {
+            val id = getLong(getColumnIndexOrThrow(_ID))
+
             val descriptionColumnIndex = getString(getColumnIndexOrThrow(COLUMN_SHIFT_DESCRIPTION))
             val dateColumnIndex = getString(getColumnIndexOrThrow(COLUMN_SHIFT_DATE))
             val timeInColumnIndex = getString(getColumnIndexOrThrow(COLUMN_SHIFT_TIME_IN))

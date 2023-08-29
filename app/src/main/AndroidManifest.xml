@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".di.ShiftApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,7 +17,7 @@
 
         <!-- Splash screen -->
         <activity
-            android:name="com.appttude.h_mal.farmr.SplashScreen"
+            android:name="com.appttude.h_mal.farmr.ui.SplashScreen"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar"
             tools:ignore="LockedOrientationActivity"
@@ -27,15 +28,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.appttude.h_mal.farmr.MainActivity"
-            android:parentActivityName="com.appttude.h_mal.farmr.SplashScreen"
+            android:name="com.appttude.h_mal.farmr.ui.MainActivity"
+            android:parentActivityName="com.appttude.h_mal.farmr.ui.SplashScreen"
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true"/>
 
         <provider
-            android:name="com.appttude.h_mal.farmr.data.ShiftProvider"
+            android:name="com.appttude.h_mal.farmr.data.legacydb.ShiftProvider"
             android:authorities="com.appttude.h_mal.farmr"
             android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_path" />
+        </provider>
     </application>
 
 </manifest>

@@ -19,22 +19,24 @@ class ShiftProvider : ContentProvider() {
         return true
     }
 
-    override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?,
-                       sortOrder: String?): Cursor? {
-        var selection = selection
-        var selectionArgs = selectionArgs
+    override fun query(
+        uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?,
+        sortOrder: String?
+    ): Cursor {
         val database = mDbHelper!!.readableDatabase
-        val cursor: Cursor
-        val match = sUriMatcher.match(uri)
-        when (match) {
-            SHIFTS -> cursor = database.query(ShiftsEntry.TABLE_NAME, projection, selection, selectionArgs,
-                    null, null, sortOrder)
+        val cursor: Cursor = when (sUriMatcher.match(uri)) {
+            SHIFTS -> database.query(
+                ShiftsEntry.TABLE_NAME, projection, selection, selectionArgs,
+                null, null, sortOrder
+            )
 
             SHIFT_ID -> {
-                selection = ShiftsEntry._ID + "=?"
-                selectionArgs = arrayOf(ContentUris.parseId(uri).toString())
-                cursor = database.query(ShiftsEntry.TABLE_NAME, projection, selection, selectionArgs,
-                        null, null, sortOrder)
+                val mSelection = ShiftsEntry._ID + "=?"
+                val mSelectionArgs = arrayOf(ContentUris.parseId(uri).toString())
+                database.query(
+                    ShiftsEntry.TABLE_NAME, projection, mSelection, mSelectionArgs,
+                    null, null, sortOrder
+                )
             }
 
             else -> throw IllegalArgumentException("Cannot query $uri")
@@ -44,26 +46,25 @@ class ShiftProvider : ContentProvider() {
     }
 
     override fun insert(uri: Uri, contentValues: ContentValues?): Uri? {
-        val match = sUriMatcher.match(uri)
-        return when (match) {
+        return when (sUriMatcher.match(uri)) {
             SHIFTS -> insertShift(uri, contentValues)
             else -> throw IllegalArgumentException("Insertion is not supported for $uri")
         }
     }
 
     private fun insertShift(uri: Uri, values: ContentValues?): Uri? {
-        val description = values!!.getAsString(ShiftsEntry.COLUMN_SHIFT_DESCRIPTION)
-                ?: throw IllegalArgumentException("Description required")
-        val date = values.getAsString(ShiftsEntry.COLUMN_SHIFT_DATE)
-                ?: throw IllegalArgumentException("Date required")
-        val timeIn = values.getAsString(ShiftsEntry.COLUMN_SHIFT_TIME_IN)
-                ?: throw IllegalArgumentException("Time In required")
-        val timeOut = values.getAsString(ShiftsEntry.COLUMN_SHIFT_TIME_OUT)
-                ?: throw IllegalArgumentException("Time Out required")
+        values!!.getAsString(ShiftsEntry.COLUMN_SHIFT_DESCRIPTION)
+            ?: throw IllegalArgumentException("Description required")
+        values.getAsString(ShiftsEntry.COLUMN_SHIFT_DATE)
+            ?: throw IllegalArgumentException("Date required")
+        values.getAsString(ShiftsEntry.COLUMN_SHIFT_TIME_IN)
+            ?: throw IllegalArgumentException("Time In required")
+        values.getAsString(ShiftsEntry.COLUMN_SHIFT_TIME_OUT)
+            ?: throw IllegalArgumentException("Time Out required")
         val duration = values.getAsFloat(ShiftsEntry.COLUMN_SHIFT_DURATION)
         require(duration >= 0) { "Duration cannot be negative" }
-        val shiftType = values.getAsString(ShiftsEntry.COLUMN_SHIFT_TYPE)
-                ?: throw IllegalArgumentException("Shift type required")
+        values.getAsString(ShiftsEntry.COLUMN_SHIFT_TYPE)
+            ?: throw IllegalArgumentException("Shift type required")
         val shiftUnits = values.getAsFloat(ShiftsEntry.COLUMN_SHIFT_UNIT)
         require(shiftUnits >= 0) { "Units cannot be negative" }
         val payRate = values.getAsFloat(ShiftsEntry.COLUMN_SHIFT_PAYRATE)
@@ -82,43 +83,47 @@ class ShiftProvider : ContentProvider() {
         return ContentUris.withAppendedId(uri, id)
     }
 
-    override fun update(uri: Uri, contentValues: ContentValues?, selection: String?,
-                        selectionArgs: Array<String>?): Int {
-        var selection = selection
-        var selectionArgs = selectionArgs
-        val match = sUriMatcher.match(uri)
-        return when (match) {
+    override fun update(
+        uri: Uri, contentValues: ContentValues?, selection: String?,
+        selectionArgs: Array<String>?
+    ): Int {
+        return when (sUriMatcher.match(uri)) {
             SHIFTS -> updateShift(uri, contentValues, selection, selectionArgs)
             SHIFT_ID -> {
-                selection = ShiftsEntry._ID + "=?"
-                selectionArgs = arrayOf(ContentUris.parseId(uri).toString())
-                updateShift(uri, contentValues, selection, selectionArgs)
+                val mSelection = ShiftsEntry._ID + "=?"
+                val mSelectionArgs = arrayOf(ContentUris.parseId(uri).toString())
+                updateShift(uri, contentValues, mSelection, mSelectionArgs)
             }
 
             else -> throw IllegalArgumentException("Update is not supported for $uri")
         }
     }
 
-    private fun updateShift(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
+    private fun updateShift(
+        uri: Uri,
+        values: ContentValues?,
+        selection: String?,
+        selectionArgs: Array<String>?
+    ): Int {
         if (values!!.containsKey(ShiftsEntry.COLUMN_SHIFT_DESCRIPTION)) {
-            val description = values.getAsString(ShiftsEntry.COLUMN_SHIFT_DESCRIPTION)
-                    ?: throw IllegalArgumentException("description required")
+            values.getAsString(ShiftsEntry.COLUMN_SHIFT_DESCRIPTION)
+                ?: throw IllegalArgumentException("description required")
         }
         if (values.containsKey(ShiftsEntry.COLUMN_SHIFT_DATE)) {
-            val date = values.getAsString(ShiftsEntry.COLUMN_SHIFT_DATE)
-                    ?: throw IllegalArgumentException("date required")
+            values.getAsString(ShiftsEntry.COLUMN_SHIFT_DATE)
+                ?: throw IllegalArgumentException("date required")
         }
         if (values.containsKey(ShiftsEntry.COLUMN_SHIFT_TIME_IN)) {
-            val timeIn = values.getAsString(ShiftsEntry.COLUMN_SHIFT_TIME_IN)
-                    ?: throw IllegalArgumentException("time in required")
+            values.getAsString(ShiftsEntry.COLUMN_SHIFT_TIME_IN)
+                ?: throw IllegalArgumentException("time in required")
         }
         if (values.containsKey(ShiftsEntry.COLUMN_SHIFT_TIME_OUT)) {
-            val timeOut = values.getAsString(ShiftsEntry.COLUMN_SHIFT_TIME_OUT)
-                    ?: throw IllegalArgumentException("time out required")
+            values.getAsString(ShiftsEntry.COLUMN_SHIFT_TIME_OUT)
+                ?: throw IllegalArgumentException("time out required")
         }
         if (values.containsKey(ShiftsEntry.COLUMN_SHIFT_BREAK)) {
-            val breaks = values.getAsString(ShiftsEntry.COLUMN_SHIFT_BREAK)
-                    ?: throw IllegalArgumentException("break required")
+            values.getAsString(ShiftsEntry.COLUMN_SHIFT_BREAK)
+                ?: throw IllegalArgumentException("break required")
         }
         if (values.size() == 0) {
             return 0
@@ -132,17 +137,15 @@ class ShiftProvider : ContentProvider() {
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        var selection = selection
-        var selectionArgs = selectionArgs
         val database = mDbHelper!!.writableDatabase
-        val rowsDeleted: Int
-        val match = sUriMatcher.match(uri)
-        when (match) {
-            SHIFTS -> rowsDeleted = database.delete(ShiftsEntry.TABLE_NAME, selection, selectionArgs)
+        val rowsDeleted: Int = when (sUriMatcher.match(uri)) {
+            SHIFTS -> database.delete(ShiftsEntry.TABLE_NAME, selection, selectionArgs)
+
             SHIFT_ID -> {
-                selection = ShiftsEntry._ID + "=?"
-                selectionArgs = arrayOf(ContentUris.parseId(uri).toString())
-                rowsDeleted = database.delete(ShiftsEntry.TABLE_NAME, selection, selectionArgs)
+                val mSelection = ShiftsEntry._ID + "=?"
+                val mSelectionArgs = arrayOf(ContentUris.parseId(uri).toString())
+
+                database.delete(ShiftsEntry.TABLE_NAME, mSelection, mSelectionArgs)
             }
 
             else -> throw IllegalArgumentException("Deletion is not supported for $uri")
@@ -169,7 +172,11 @@ class ShiftProvider : ContentProvider() {
 
         init {
             sUriMatcher.addURI(ShiftsContract.CONTENT_AUTHORITY, ShiftsContract.PATH_SHIFTS, SHIFTS)
-            sUriMatcher.addURI(ShiftsContract.CONTENT_AUTHORITY, ShiftsContract.PATH_SHIFTS + "/#", SHIFT_ID)
+            sUriMatcher.addURI(
+                ShiftsContract.CONTENT_AUTHORITY,
+                ShiftsContract.PATH_SHIFTS + "/#",
+                SHIFT_ID
+            )
         }
     }
 

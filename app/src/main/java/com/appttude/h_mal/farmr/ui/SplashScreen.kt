@@ -1,5 +1,6 @@
 package com.appttude.h_mal.farmr.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +14,7 @@ import com.appttude.h_mal.farmr.R
 /**
  * Created by h_mal on 27/06/2017.
  */
+@SuppressLint("CustomSplashScreen")
 class SplashScreen : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,13 +22,9 @@ class SplashScreen : Activity() {
 
         val i = Intent(this@SplashScreen, MainActivity::class.java)
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        Handler().postDelayed({
-            // This method will be executed once the timer is over
-            // Start your app main activity
-//                startActivity(i,bundle);
+        Handler(Looper.getMainLooper()).postDelayed({
             startActivity(i)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            //                finish();
         }, SPLASH_TIME_OUT)
     }
 

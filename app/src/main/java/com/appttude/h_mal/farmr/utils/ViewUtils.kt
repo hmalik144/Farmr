@@ -161,12 +161,12 @@ fun EditText.setDatePicker(onSelected: (String) -> Unit) {
     }
     val mDatePicker = DatePickerDialog(
         (this.context),
-        { datepicker, selectedyear, selectedmonth, selectedday ->
-            var currentMonth = selectedmonth
-            val dateString = StringBuilder().append(selectedyear).append("-")
+        { _, selectedYear, selectedMonth, selectedDay ->
+            var currentMonth = selectedMonth
+            val dateString = StringBuilder().append(selectedYear).append("-")
                 .append(String.format("%02d", (currentMonth + 1.also { currentMonth = it })))
                 .append("-")
-                .append(String.format("%02d", selectedday))
+                .append(String.format("%02d", selectedDay))
                 .toString()
             setText(dateString)
             onSelected.invoke(dateString)

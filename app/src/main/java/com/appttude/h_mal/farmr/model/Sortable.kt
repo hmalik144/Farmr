@@ -10,8 +10,6 @@ enum class Sortable(val label: String) {
     TOTALPAY("Total Pay");
 
     companion object {
-        val entries = Sortable.values()
-
         fun getEnumByType(label: String): Sortable {
             return Sortable.values().first { it.label == label }
         }

@@ -3,7 +3,6 @@ package com.appttude.h_mal.farmr.data.legacydb
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_BREAK
@@ -19,7 +18,6 @@ import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.CONTENT_URI
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry._ID
 import com.appttude.h_mal.farmr.model.Shift
-import com.appttude.h_mal.farmr.model.ShiftType
 
 class LegacyDatabase(private val resolver: ContentResolver) {
 

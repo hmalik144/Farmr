@@ -9,7 +9,6 @@ import com.appttude.h_mal.farmr.ui.robots.addScreen
 import com.appttude.h_mal.farmr.ui.robots.filterScreen
 import com.appttude.h_mal.farmr.ui.robots.homeScreen
 import com.appttude.h_mal.farmr.ui.robots.viewScreen
-import com.appttude.h_mal.farmr.utils.ID
 import org.junit.Test
 
 class ShiftTests : BaseTest<MainActivity>(MainActivity::class.java) {

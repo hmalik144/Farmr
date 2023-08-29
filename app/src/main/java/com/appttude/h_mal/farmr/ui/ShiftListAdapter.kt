@@ -1,5 +1,6 @@
 package com.appttude.h_mal.farmr.ui
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ class ShiftListAdapter(
         return BaseRecyclerAdapter.CurrentViewHolder(currentViewHolder)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: BaseRecyclerAdapter.CurrentViewHolder, position: Int) {
         val view = holder.itemView
         val data = getItem(position)
@@ -90,8 +92,8 @@ class ShiftListAdapter(
         view.setOnLongClickListener {
             AlertDialog.Builder(it.context)
                 .setMessage("Are you sure you want to delete")
-                .setPositiveButton("delete") { dialog, id -> longPressCallback.invoke(data.id) }
-                .setNegativeButton("cancel") { dialog, id ->
+                .setPositiveButton("delete") { _, _ -> longPressCallback.invoke(data.id) }
+                .setNegativeButton("cancel") { dialog, _ ->
                     dialog?.dismiss()
                 }
                 .create().show()

@@ -2,9 +2,9 @@ package com.appttude.h_mal.farmr.viewmodel
 
 import com.appttude.h_mal.farmr.base.BaseViewModel
 import com.appttude.h_mal.farmr.data.Repository
-import com.appttude.h_mal.farmr.data.prefs.DESCRIPTION
 import com.appttude.h_mal.farmr.data.prefs.DATE_IN
 import com.appttude.h_mal.farmr.data.prefs.DATE_OUT
+import com.appttude.h_mal.farmr.data.prefs.DESCRIPTION
 import com.appttude.h_mal.farmr.data.prefs.TYPE
 import com.appttude.h_mal.farmr.model.FilterStore
 

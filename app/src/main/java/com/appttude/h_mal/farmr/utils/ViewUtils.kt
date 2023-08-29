@@ -19,9 +19,7 @@ import androidx.annotation.AnimRes
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.appttude.h_mal.farmr.R
-import com.appttude.h_mal.farmr.ui.FragmentAddItem
 import java.util.Calendar
 
 fun View.show() {
@@ -161,12 +159,12 @@ fun EditText.setDatePicker(onSelected: (String) -> Unit) {
     }
     val mDatePicker = DatePickerDialog(
         (this.context),
-        { datepicker, selectedyear, selectedmonth, selectedday ->
-            var currentMonth = selectedmonth
-            val dateString = StringBuilder().append(selectedyear).append("-")
+        { _, selectedYear, selectedMonth, selectedDay ->
+            var currentMonth = selectedMonth
+            val dateString = StringBuilder().append(selectedYear).append("-")
                 .append(String.format("%02d", (currentMonth + 1.also { currentMonth = it })))
                 .append("-")
-                .append(String.format("%02d", selectedday))
+                .append(String.format("%02d", selectedDay))
                 .toString()
             setText(dateString)
             onSelected.invoke(dateString)

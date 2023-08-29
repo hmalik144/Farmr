@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.ViewModelLazy
 import com.appttude.h_mal.farmr.model.ViewState
 import com.appttude.h_mal.farmr.utils.getGenericClassAt
 import com.appttude.h_mal.farmr.utils.popBackStack
 import com.appttude.h_mal.farmr.viewmodel.ApplicationViewModelFactory
 import org.kodein.di.KodeinAware
-import org.kodein.di.android.kodein
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import kotlin.properties.Delegates

@@ -1,8 +1,8 @@
 package com.appttude.h_mal.farmr.ui.robots
 
 import com.appttude.h_mal.farmr.R
-import com.appttude.h_mal.farmr.ui.BaseTestRobot
 import com.appttude.h_mal.farmr.model.ShiftType
+import com.appttude.h_mal.farmr.ui.BaseTestRobot
 
 fun viewScreen(func: ViewItemScreenRobot.() -> Unit) = ViewItemScreenRobot().apply { func() }
 class ViewItemScreenRobot : BaseTestRobot() {

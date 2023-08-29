@@ -10,7 +10,6 @@ import io.mockk.mockk
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyLong
-import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 

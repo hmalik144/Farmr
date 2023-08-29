@@ -1,12 +1,10 @@
 package com.appttude.h_mal.farmr.ui
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -95,7 +93,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
                 AlertDialog.Builder(context)
                     .setTitle("Help & Support:")
                     .setView(R.layout.dialog_layout)
-                    .setPositiveButton(android.R.string.yes) { arg0, arg1 -> arg0.dismiss() }
+                    .setPositiveButton(android.R.string.ok) { arg0, _ -> arg0.dismiss() }
                     .create().show()
                 return true
             }
@@ -120,12 +118,11 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
                     AlertDialog.Builder(context)
                         .setTitle("Export?")
                         .setMessage("Exporting current filtered data. Continue?")
-                        .setNegativeButton(android.R.string.no, null)
-                        .setPositiveButton(android.R.string.yes) { arg0, arg1 -> exportData() }
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok) { _, _ -> exportData() }
                         .create().show()
                 } else {
-                    Toast.makeText(context, "Storage permissions required", Toast.LENGTH_SHORT)
-                        .show()
+                    displayToast("Storage permissions required")
                 }
                 return true
             }
@@ -134,7 +131,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
                 AlertDialog.Builder(context)
                     .setTitle("Info:")
                     .setMessage(viewModel.getInformation())
-                    .setPositiveButton(android.R.string.yes) { arg0, arg1 ->
+                    .setPositiveButton(android.R.string.ok) { arg0, _ ->
                         arg0.dismiss()
                     }.create().show()
                 return true
@@ -144,7 +141,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
     }
 
     private fun sortData() {
-        val groupName = Sortable.entries.map { it.label }.toTypedArray()
+        val groupName = Sortable.values().map { it.label }.toTypedArray()
         var sort = Sortable.ID
 
         val sortAndOrder = viewModel.getSortAndOrder()
@@ -155,11 +152,11 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
             .setSingleChoiceItems(
                 groupName,
                 checkedItem
-            ) { p0, p1 -> sort = Sortable.getEnumByType(groupName[p1]) }
-            .setPositiveButton("Ascending") { dialog, id ->
+            ) { _, p1 -> sort = Sortable.getEnumByType(groupName[p1]) }
+            .setPositiveButton("Ascending") { dialog, _ ->
                 viewModel.setSortAndOrder(sort)
                 dialog.dismiss()
-            }.setNegativeButton("Descending") { dialog, id ->
+            }.setNegativeButton("Descending") { dialog, _ ->
                 viewModel.setSortAndOrder(sort, Order.DESCENDING)
                 dialog.dismiss()
             }
@@ -210,25 +207,25 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         println("request code$requestCode")
         if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
-            if (grantResults.size > 0
+            if (grantResults.isNotEmpty()
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED
             ) {
                 exportDialog()
             } else {
-                Toast.makeText(context, "Storage Permissions denied", Toast.LENGTH_SHORT).show()
+                displayToast("Storage Permissions denied")
             }
         }
     }
 
-    fun exportDialog() {
+    private fun exportDialog() {
         AlertDialog.Builder(context)
             .setTitle("Export?")
             .setMessage("Exporting current filtered data. Continue?")
-            .setNegativeButton(android.R.string.no, null)
-            .setPositiveButton(android.R.string.yes) { arg0, arg1 -> exportData() }.create().show()
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(android.R.string.ok) { _, _ -> exportData() }.create().show()
     }
 
-    fun checkStoragePermissions(activity: Activity?): Boolean {
+    private fun checkStoragePermissions(activity: Activity?): Boolean {
         var status = false
         val permission = ActivityCompat.checkSelfPermission(
             activity!!,

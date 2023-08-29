@@ -26,7 +26,6 @@ import com.appttude.h_mal.farmr.utils.setDatePicker
 import com.appttude.h_mal.farmr.utils.setTimePicker
 import com.appttude.h_mal.farmr.utils.show
 import com.appttude.h_mal.farmr.utils.validateField
-import com.appttude.h_mal.farmr.viewmodel.MainViewModel
 import com.appttude.h_mal.farmr.viewmodel.SubmissionViewModel
 
 class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_item),
@@ -120,6 +119,7 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
 
     private fun setupViewAfterViewCreated() {
         id = arguments?.getLong(ID)
+        wholeView.hide()
 
         val title = when (arguments?.containsKey(ID)) {
             true -> {

@@ -22,7 +22,6 @@ import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Sortable
 import com.appttude.h_mal.farmr.model.Success
-import com.appttude.h_mal.farmr.utils.CURRENCY
 import com.appttude.h_mal.farmr.utils.convertDateString
 import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
 import com.appttude.h_mal.farmr.utils.sortedByOrder
@@ -239,7 +238,7 @@ class MainViewModel(
             val data = shiftLiveData.value!!.applyFilters()
                 .sortList(sortAndOrder.first, sortAndOrder.second)
             var currentRow = 0
-            val cells = data.mapIndexed { index, shift ->
+            val cells = data.map { shift ->
                 currentRow += 1
                 listOf(
                     Label(0, currentRow, shift.id.toString()),

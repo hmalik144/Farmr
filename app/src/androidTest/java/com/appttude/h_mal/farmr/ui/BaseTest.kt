@@ -6,9 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -18,7 +16,6 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import com.appttude.h_mal.farmr.application.TestAppClass
-import com.appttude.h_mal.farmr.di.ShiftApplication
 import com.appttude.h_mal.farmr.ui.utils.getShifts
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matcher

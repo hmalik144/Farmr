@@ -1,10 +1,7 @@
 package com.appttude.h_mal.farmr.model
 
-import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.utils.calculateDuration
-import com.appttude.h_mal.farmr.utils.convertTimeStringToHourMinutesPair
 import com.appttude.h_mal.farmr.utils.formatToTwoDp
-import java.io.IOException
 
 data class Shift(
     val type: ShiftType,

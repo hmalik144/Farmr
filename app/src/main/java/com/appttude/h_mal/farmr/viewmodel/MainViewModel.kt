@@ -22,7 +22,6 @@ import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Sortable
 import com.appttude.h_mal.farmr.model.Success
-import com.appttude.h_mal.farmr.utils.CURRENCY
 import com.appttude.h_mal.farmr.utils.convertDateString
 import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
 import com.appttude.h_mal.farmr.utils.sortedByOrder

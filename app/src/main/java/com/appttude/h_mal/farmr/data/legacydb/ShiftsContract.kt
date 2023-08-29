@@ -3,7 +3,6 @@ package com.appttude.h_mal.farmr.data.legacydb
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.BaseColumns
-import com.appttude.h_mal.farmr.BuildConfig
 
 /**
  * Created by h_mal on 26/12/2017.

@@ -10,17 +10,14 @@ import com.appttude.h_mal.farmr.data.prefs.TYPE
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.ViewState
 import com.appttude.h_mal.farmr.utils.getOrAwaitValue
+import com.appttude.h_mal.farmr.utils.getShifts
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyFloat
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyList
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.ArgumentMatchers.anyString
 import java.util.concurrent.TimeoutException
 import kotlin.test.assertEquals
 
@@ -130,110 +127,4 @@ class MainViewModelTest {
             Pair(TYPE, type)
         )
 
-    private fun getShifts() = listOf(
-        ShiftObject(
-            anyLong(),
-            ShiftType.HOURLY.type,
-            "Day one",
-            "2023-08-01",
-            "12:00",
-            "13:00",
-            1f,
-            anyInt(),
-            anyFloat(),
-            10f,
-            10f
-        ),
-        ShiftObject(
-            anyLong(),
-            ShiftType.HOURLY.type,
-            "Day two",
-            "2023-08-02",
-            "12:00",
-            "13:00",
-            1f,
-            anyInt(),
-            anyFloat(),
-            10f,
-            10f
-        ),
-        ShiftObject(
-            anyLong(),
-            ShiftType.HOURLY.type,
-            "Day three",
-            "2023-08-03",
-            "12:00",
-            "13:00",
-            1f,
-            30,
-            anyFloat(),
-            10f,
-            5f
-        ),
-        ShiftObject(
-            anyLong(),
-            ShiftType.HOURLY.type,
-            "Day four",
-            "2023-08-04",
-            "12:00",
-            "13:00",
-            1f,
-            30,
-            anyFloat(),
-            10f,
-            5f
-        ),
-        ShiftObject(
-            anyLong(),
-            ShiftType.PIECE.type,
-            "Day five",
-            "2023-08-05",
-            anyString(),
-            anyString(),
-            anyFloat(),
-            anyInt(),
-            1f,
-            10f,
-            10f
-        ),
-        ShiftObject(
-            anyLong(),
-            ShiftType.PIECE.type,
-            "Day six",
-            "2023-08-06",
-            anyString(),
-            anyString(),
-            anyFloat(),
-            anyInt(),
-            1f,
-            10f,
-            10f
-        ),
-        ShiftObject(
-            anyLong(),
-            ShiftType.PIECE.type,
-            "Day seven",
-            "2023-08-07",
-            anyString(),
-            anyString(),
-            anyFloat(),
-            anyInt(),
-            1f,
-            10f,
-            10f
-        ),
-        ShiftObject(
-            anyLong(),
-            ShiftType.PIECE.type,
-            "Day eight",
-            "2023-08-08",
-            anyString(),
-            anyString(),
-            anyFloat(),
-            anyInt(),
-            1f,
-            10f,
-            10f
-        ),
-    )
 }

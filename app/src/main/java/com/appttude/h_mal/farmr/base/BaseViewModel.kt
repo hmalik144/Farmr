@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appttude.h_mal.farmr.model.ViewState
-import java.lang.Exception
 
 open class BaseViewModel: ViewModel() {
 

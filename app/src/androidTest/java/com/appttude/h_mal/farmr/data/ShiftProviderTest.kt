@@ -3,6 +3,7 @@ package com.appttude.h_mal.farmr.data
 import android.content.ContentResolver
 import android.content.ContentValues
 import androidx.test.rule.provider.ProviderTestRule
+import com.appttude.h_mal.farmr.data.legacydb.ShiftProvider
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.CONTENT_AUTHORITY
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_BREAK
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_DATE
@@ -16,7 +17,6 @@ import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_UNIT
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.CONTENT_URI
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry._ID
-import com.appttude.h_mal.farmr.data.legacydb.ShiftProvider
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import org.junit.After

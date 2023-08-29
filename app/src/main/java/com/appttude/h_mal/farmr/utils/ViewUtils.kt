@@ -19,9 +19,7 @@ import androidx.annotation.AnimRes
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.appttude.h_mal.farmr.R
-import com.appttude.h_mal.farmr.ui.FragmentAddItem
 import java.util.Calendar
 
 fun View.show() {

@@ -1,12 +1,10 @@
 package com.appttude.h_mal.farmr.ui
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View

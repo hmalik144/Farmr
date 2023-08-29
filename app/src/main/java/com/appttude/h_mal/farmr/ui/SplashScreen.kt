@@ -6,9 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.widget.RelativeLayout
-import androidx.core.app.ActivityOptionsCompat
 import com.appttude.h_mal.farmr.R
 
 /**

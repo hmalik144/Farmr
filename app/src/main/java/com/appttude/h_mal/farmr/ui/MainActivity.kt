@@ -1,11 +1,7 @@
 package com.appttude.h_mal.farmr.ui
 
 import android.Manifest
-import android.R.string.cancel
-import android.R.string.ok
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
@@ -14,10 +10,7 @@ import androidx.core.app.ActivityCompat
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BackPressedListener
 import com.appttude.h_mal.farmr.base.BaseActivity
-import com.appttude.h_mal.farmr.utils.createDialog
 import com.appttude.h_mal.farmr.utils.popBackStack
-import com.appttude.h_mal.farmr.viewmodel.MainViewModel
-import kotlin.system.exitProcess
 
 class MainActivity : BaseActivity() {
     private lateinit var toolbar: Toolbar

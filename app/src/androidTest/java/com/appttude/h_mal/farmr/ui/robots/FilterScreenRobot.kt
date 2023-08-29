@@ -1,7 +1,7 @@
-package com.appttude.h_mal.farmr.data.ui.robots
+package com.appttude.h_mal.farmr.ui.robots
 
 import com.appttude.h_mal.farmr.R
-import com.appttude.h_mal.farmr.data.ui.BaseTestRobot
+import com.appttude.h_mal.farmr.ui.BaseTestRobot
 import com.appttude.h_mal.farmr.model.ShiftType
 
 fun filterScreen(func: FilterScreenRobot.() -> Unit) = FilterScreenRobot().apply { func() }

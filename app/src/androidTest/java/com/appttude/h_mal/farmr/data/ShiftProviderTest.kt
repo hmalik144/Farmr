@@ -19,6 +19,7 @@ import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry._ID
 import com.appttude.h_mal.farmr.data.legacydb.ShiftProvider
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 
@@ -30,6 +31,11 @@ class ShiftProviderTest {
 
     private val contentResolver: ContentResolver
         get() = providerRule.resolver
+
+    @After
+    fun tearDown() {
+        contentResolver.delete(CONTENT_URI, null, null)
+    }
 
     @Test
     fun insertEntry_queryEntry_assertEntry() {

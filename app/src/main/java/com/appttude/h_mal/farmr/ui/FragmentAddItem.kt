@@ -18,6 +18,7 @@ import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.ID
 import com.appttude.h_mal.farmr.utils.createDialog
 import com.appttude.h_mal.farmr.utils.displayToast
+import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
 import com.appttude.h_mal.farmr.utils.formatToTwoDpString
 import com.appttude.h_mal.farmr.utils.hide
 import com.appttude.h_mal.farmr.utils.popBackStack
@@ -158,8 +159,8 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
                             mUnits = units
                         }
                     }
-                    mPayRateEditText.setText(rateOfPay.formatToTwoDpString())
-                    mTotalPayTextView.text = totalPay.formatToTwoDpString()
+                    mPayRateEditText.setText(rateOfPay.formatAsCurrencyString())
+                    mTotalPayTextView.text = totalPay.formatAsCurrencyString()
 
                     calculateTotalPay()
                 }
@@ -267,7 +268,7 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
                     (mUnits ?: 0f) * mPayRate
                 }
             }
-            mTotalPayTextView.text = total.formatToTwoDpString()
+            mTotalPayTextView.text = total.formatAsCurrencyString()
         }
     }
 

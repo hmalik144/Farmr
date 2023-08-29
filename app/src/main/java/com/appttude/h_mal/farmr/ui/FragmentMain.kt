@@ -155,7 +155,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
             .setSingleChoiceItems(
                 groupName,
                 checkedItem
-            ) { p0, p1 -> sort = Sortable.valueOf(groupName[p1]) }
+            ) { p0, p1 -> sort = Sortable.getEnumByType(groupName[p1]) }
             .setPositiveButton("Ascending") { dialog, id ->
                 viewModel.setSortAndOrder(sort)
                 dialog.dismiss()

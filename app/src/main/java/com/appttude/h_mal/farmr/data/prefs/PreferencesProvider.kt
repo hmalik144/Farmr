@@ -62,4 +62,8 @@ class PreferenceProvider(
         )
     }
 
+    fun clearPrefs() {
+        preference.edit().clear().apply()
+    }
+
 }

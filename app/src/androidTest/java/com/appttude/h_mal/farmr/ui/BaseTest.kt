@@ -1,4 +1,4 @@
-package com.appttude.h_mal.farmr.data.ui
+package com.appttude.h_mal.farmr.ui
 
 import android.Manifest
 import android.app.Activity
@@ -6,7 +6,9 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -15,13 +17,16 @@ import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import com.appttude.h_mal.farmr.application.TestAppClass
 import com.appttude.h_mal.farmr.di.ShiftApplication
+import com.appttude.h_mal.farmr.ui.utils.getShifts
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import org.kodein.di.android.kodein
 
 @Suppress("EmptyMethod")
 open class BaseTest<A : Activity>(
@@ -30,7 +35,7 @@ open class BaseTest<A : Activity>(
 ) {
 
     lateinit var scenario: ActivityScenario<A>
-    private lateinit var testApp: ShiftApplication
+    private lateinit var testApp: TestAppClass
     private lateinit var testActivity: Activity
     private lateinit var decorView: View
 
@@ -38,7 +43,7 @@ open class BaseTest<A : Activity>(
     var permissionRule = GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE)
 
     @Before
-    fun setUp() {
+    open fun setUp() {
         val startIntent =
             Intent(InstrumentationRegistry.getInstrumentation().targetContext, activity)
         if (intentBundle != null) {
@@ -46,13 +51,17 @@ open class BaseTest<A : Activity>(
         }
 
         testApp =
-            InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ShiftApplication
+            InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as TestAppClass
+        kodein(testApp)
         runBlocking {
             beforeLaunch()
         }
 
         scenario = ActivityScenario.launch(startIntent)
         scenario.onActivity {
+            testApp =
+                InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as TestAppClass
+            onLaunch()
             decorView = it.window.decorView
             testActivity = it
         }
@@ -67,6 +76,7 @@ open class BaseTest<A : Activity>(
     }
 
     open fun beforeLaunch() {}
+    open fun onLaunch() {}
     open fun afterLaunch() {}
     open fun testFinished() {}
 
@@ -88,4 +98,13 @@ open class BaseTest<A : Activity>(
             waitFor(3500)
         }
     }
+
+    fun navigateBack() = Espresso.pressBack()
+
+    fun addRandomShifts() {
+        testApp.addShiftsToDatabase(getShifts())
+    }
+
+    fun clearDataBase() = testApp.clearDatabase()
+    fun clearPrefs() = testApp.cleanPrefs()
 }

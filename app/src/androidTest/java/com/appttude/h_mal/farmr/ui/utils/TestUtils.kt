@@ -1,4 +1,4 @@
-package com.appttude.h_mal.farmr.data.ui.utils
+package com.appttude.h_mal.farmr.ui.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer

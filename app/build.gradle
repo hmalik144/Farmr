@@ -10,7 +10,7 @@ android {
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner 'com.appttude.h_mal.farmr.application.TestRunner'
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -19,6 +19,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    useLibrary 'android.test.mock'
 }
 
 dependencies {

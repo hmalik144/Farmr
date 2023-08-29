@@ -35,6 +35,5 @@ class InfoViewModel(
             stringBuilder.append(" (+ ").append(shiftObject.breakMins).append(" minutes break)")
         }
         return stringBuilder.toString()
-
     }
 }

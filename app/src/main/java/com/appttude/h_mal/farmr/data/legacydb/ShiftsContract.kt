@@ -3,12 +3,13 @@ package com.appttude.h_mal.farmr.data.legacydb
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.BaseColumns
+import com.appttude.h_mal.farmr.BuildConfig
 
 /**
  * Created by h_mal on 26/12/2017.
  */
 object ShiftsContract {
-    const val CONTENT_AUTHORITY = "com.appttude.h_mal.farmr"
+    const val CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID
     val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")
     const val PATH_SHIFTS = "shifts"
 

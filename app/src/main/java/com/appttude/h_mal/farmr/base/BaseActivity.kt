@@ -1,26 +1,10 @@
 package com.appttude.h_mal.farmr.base
 
 import android.content.Intent
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelLazy
 import com.appttude.h_mal.farmr.utils.displayToast
-import com.appttude.h_mal.farmr.utils.getGenericClassAt
-import com.appttude.h_mal.farmr.viewmodel.ApplicationViewModelFactory
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.kodein
-import org.kodein.di.generic.instance
 
-abstract class BaseActivity<V : BaseViewModel> : AppCompatActivity(), KodeinAware {
-
-    override val kodein by kodein()
-    private val factory by instance<ApplicationViewModelFactory>()
-
-    val viewModel: V by getViewModel()
-
-    private fun getViewModel(): Lazy<V> =
-        ViewModelLazy(getGenericClassAt(0), storeProducer = { viewModelStore },
-            factoryProducer = { factory } )
+abstract class BaseActivity : AppCompatActivity() {
 
 
     /**

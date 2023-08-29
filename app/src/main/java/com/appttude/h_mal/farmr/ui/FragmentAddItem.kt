@@ -18,6 +18,7 @@ import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.ID
 import com.appttude.h_mal.farmr.utils.createDialog
 import com.appttude.h_mal.farmr.utils.displayToast
+import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
 import com.appttude.h_mal.farmr.utils.formatToTwoDpString
 import com.appttude.h_mal.farmr.utils.hide
 import com.appttude.h_mal.farmr.utils.popBackStack
@@ -26,8 +27,9 @@ import com.appttude.h_mal.farmr.utils.setTimePicker
 import com.appttude.h_mal.farmr.utils.show
 import com.appttude.h_mal.farmr.utils.validateField
 import com.appttude.h_mal.farmr.viewmodel.MainViewModel
+import com.appttude.h_mal.farmr.viewmodel.SubmissionViewModel
 
-class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
+class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_item),
     RadioGroup.OnCheckedChangeListener, BackPressedListener {
 
     private lateinit var mHourlyRadioButton: RadioButton
@@ -157,8 +159,8 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
                             mUnits = units
                         }
                     }
-                    mPayRateEditText.setText(rateOfPay.formatToTwoDpString())
-                    mTotalPayTextView.text = totalPay.formatToTwoDpString()
+                    mPayRateEditText.setText(rateOfPay.formatAsCurrencyString())
+                    mTotalPayTextView.text = totalPay.formatAsCurrencyString()
 
                     calculateTotalPay()
                 }
@@ -262,12 +264,11 @@ class FragmentAddItem : BaseFragment<MainViewModel>(R.layout.fragment_add_item),
                         StringBuilder().append(mDuration).append(" hours").toString()
                     mDuration!! * mPayRate
                 }
-
                 ShiftType.PIECE -> {
                     (mUnits ?: 0f) * mPayRate
                 }
             }
-            mTotalPayTextView.text = total.formatToTwoDpString()
+            mTotalPayTextView.text = total.formatAsCurrencyString()
         }
     }
 

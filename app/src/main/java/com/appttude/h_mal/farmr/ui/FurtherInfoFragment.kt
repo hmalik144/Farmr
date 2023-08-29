@@ -11,13 +11,14 @@ import com.appttude.h_mal.farmr.base.BaseFragment
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.utils.CURRENCY
-import com.appttude.h_mal.farmr.utils.ID
+import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
+import com.appttude.h_mal.farmr.utils.formatToTwoDpString
 import com.appttude.h_mal.farmr.utils.hide
 import com.appttude.h_mal.farmr.utils.navigateToFragment
 import com.appttude.h_mal.farmr.utils.show
-import com.appttude.h_mal.farmr.viewmodel.MainViewModel
+import com.appttude.h_mal.farmr.viewmodel.InfoViewModel
 
-class FurtherInfoFragment : BaseFragment<MainViewModel>(R.layout.fragment_futher_info) {
+class FurtherInfoFragment : BaseFragment<InfoViewModel>(R.layout.fragment_futher_info) {
     private lateinit var typeTV: TextView
     private lateinit var descriptionTV: TextView
     private lateinit var dateTV: TextView
@@ -52,60 +53,50 @@ class FurtherInfoFragment : BaseFragment<MainViewModel>(R.layout.fragment_futher
         hourlyDetailHolder = view.findViewById(R.id.details_hourly_details)
         unitsHolder = view.findViewById(R.id.details_units_holder)
 
-        val id = arguments!!.getLong(ID)
-
         editButton.setOnClickListener {
             navigateToFragment(FragmentAddItem(), name = "additem", bundle = arguments!!)
         }
 
-        setupView(id)
+        viewModel.retrieveData(arguments)
     }
 
-    private fun setupView(id: Long) {
-        viewModel.getCurrentShift(id)?.run {
-            typeTV.text = type
-            descriptionTV.text = description
-            dateTV.text = date
-            payRateTV.text = rateOfPay.toString()
-            totalPayTV.text = StringBuilder(CURRENCY).append(totalPay).toString()
+    override fun onSuccess(data: Any?) {
+        super.onSuccess(data)
+        if (data is ShiftObject) data.setupView()
+    }
 
-            when (ShiftType.getEnumByType(type)) {
-                ShiftType.HOURLY -> {
-                    hourlyDetailHolder.show()
-                    unitsHolder.hide()
-                    times.text = StringBuilder(timeIn).append("-").append(timeOut).toString()
-                    breakTV.text = StringBuilder(breakMins).append("mins").toString()
-                    durationTV.text = buildDurationSummary(this)
-                    val paymentSummary =
-                        StringBuilder().append(duration).append(" Hours @ ").append(CURRENCY)
-                            .append(rateOfPay).append(" per Hour").append("\n")
-                            .append("Equals: ").append(CURRENCY).append(totalPay)
-                    totalPayTV.text = paymentSummary
-                }
+    private fun ShiftObject.setupView() {
+        typeTV.text = type
+        descriptionTV.text = description
+        dateTV.text = date
+        payRateTV.text = rateOfPay.toString()
+        totalPayTV.text = StringBuilder(CURRENCY).append(totalPay).toString()
 
-                ShiftType.PIECE -> {
-                    hourlyDetailHolder.hide()
-                    unitsHolder.show()
-                    unitsTV.text = units.toString()
+        when (ShiftType.getEnumByType(type)) {
+            ShiftType.HOURLY -> {
+                hourlyDetailHolder.show()
+                unitsHolder.hide()
+                times.text = StringBuilder(timeIn).append("-").append(timeOut).toString()
+                breakTV.text = StringBuilder().append(breakMins).append(" mins").toString()
+                durationTV.text = viewModel.buildDurationSummary(this)
+                val paymentSummary =
+                    StringBuilder().append(duration).append(" Hours @ ")
+                        .append(rateOfPay.formatAsCurrencyString()).append(" per Hour").append("\n")
+                        .append("Equals: ").append(totalPay.formatAsCurrencyString())
+                totalPayTV.text = paymentSummary
+            }
 
-                    val paymentSummary =
-                        StringBuilder().append(units).append(" Units @ ").append(CURRENCY)
-                            .append(rateOfPay).append(" per Unit").append("\n")
-                            .append("Equals: ").append(CURRENCY).append(totalPay)
-                    totalPayTV.text = paymentSummary
-                }
+            ShiftType.PIECE -> {
+                hourlyDetailHolder.hide()
+                unitsHolder.show()
+                unitsTV.text = units.toString()
+
+                val paymentSummary =
+                    StringBuilder().append(units.formatAsCurrencyString()).append(" Units @ ")
+                        .append(rateOfPay.formatAsCurrencyString()).append(" per Unit").append("\n")
+                        .append("Equals: ").append(totalPay.formatAsCurrencyString())
+                totalPayTV.text = paymentSummary
             }
         }
-    }
-
-    private fun buildDurationSummary(shiftObject: ShiftObject): String {
-        val time = shiftObject.getHoursMinutesPairFromDuration()
-
-        val stringBuilder = StringBuilder().append(time.first).append(" Hours ").append(time.second)
-            .append(" Minutes ")
-        if (shiftObject.breakMins > 0) {
-            stringBuilder.append(" (+ ").append(shiftObject.breakMins).append(" minutes break)")
-        }
-        return stringBuilder.toString()
     }
 }

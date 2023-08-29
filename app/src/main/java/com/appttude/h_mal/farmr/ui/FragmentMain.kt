@@ -70,7 +70,6 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
 
     override fun onStart() {
         super.onStart()
-
         viewModel.refreshLiveData()
     }
 
@@ -112,7 +111,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
             }
 
             R.id.clear_filter -> {
-                viewModel.setFiltrationDetails(null, null, null, null)
+                viewModel.clearFilters()
                 return true
             }
 
@@ -156,7 +155,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
             .setSingleChoiceItems(
                 groupName,
                 checkedItem
-            ) { p0, p1 -> sort = Sortable.valueOf(groupName[p1]) }
+            ) { p0, p1 -> sort = Sortable.getEnumByType(groupName[p1]) }
             .setPositiveButton("Ascending") { dialog, id ->
                 viewModel.setSortAndOrder(sort)
                 dialog.dismiss()

@@ -13,8 +13,8 @@ const val SORT = "SORT"
 const val ORDER = "ORDER"
 
 const val DESCRIPTION = "DESCRIPTION"
-const val TIME_IN = "TIME_IN"
-const val TIME_OUT = "TIME_OUT"
+const val DATE_IN = "TIME_IN"
+const val DATE_OUT = "TIME_OUT"
 const val TYPE = "TYPE"
 
 class PreferenceProvider(
@@ -47,8 +47,8 @@ class PreferenceProvider(
     ) {
         preference.edit()
             .putString(DESCRIPTION, description)
-            .putString(TIME_IN, timeIn)
-            .putString(TIME_OUT, timeOut)
+            .putString(DATE_IN, timeIn)
+            .putString(DATE_OUT, timeOut)
             .putString(TYPE, type)
             .apply()
     }
@@ -56,10 +56,14 @@ class PreferenceProvider(
     fun getFilteringDetails(): Map<String, String?> {
         return mapOf(
             Pair(DESCRIPTION, preference.getString(DESCRIPTION, null)),
-            Pair(TIME_IN, preference.getString(TIME_IN, null)),
-            Pair(TIME_OUT, preference.getString(TIME_OUT, null)),
+            Pair(DATE_IN, preference.getString(DATE_IN, null)),
+            Pair(DATE_OUT, preference.getString(DATE_OUT, null)),
             Pair(TYPE, preference.getString(TYPE, null))
         )
+    }
+
+    fun clearPrefs() {
+        preference.edit().clear().apply()
     }
 
 }

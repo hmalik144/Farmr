@@ -6,7 +6,7 @@ def relStorePassword = System.getenv("RELEASE_STORE_PASSWORD")
 def relKeyPassword = System.getenv("RELEASE_KEY_PASSWORD")
 def relKeyAlias = System.getenv("RELEASE_KEY_ALIAS")
 
-def keystorePath = "/keystore.jks"
+def keystorePath = System.getenv('PWD') + "/app/keystore.jks"
 def keystore = file(keystorePath).exists() ? file(keystorePath) : null
 android {
     compileSdkVersion 31

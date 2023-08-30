@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'kotlin-kapt'
 
 def relStorePassword = System.getenv("RELEASE_STORE_PASSWORD")
 def relKeyPassword = System.getenv("RELEASE_KEY_PASSWORD")
@@ -38,46 +37,52 @@ android {
 }
 
 dependencies {
-    implementation "androidx.legacy:legacy-support-v4:$LEGACY_SUPPORT_VERSION"
-    implementation "androidx.vectordrawable:vectordrawable:$VECTOR_DRAW_VERSION"
     implementation "androidx.core:core-ktx:$CORE_KTX_VERSION"
     implementation "androidx.appcompat:appcompat:$MATERIAL_VERSION"
     implementation "com.google.android.material:material:$MATERIAL_VERSION"
     implementation "androidx.constraintlayout:constraintlayout:$CONSTR_LAYOUT_VERSION"
-    implementation "androidx.fragment:fragment-ktx:$VIEW_KTX_VERSION"
-    implementation "androidx.activity:activity-ktx:$VIEW_KTX_VERSION"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$VIEWMODEL_VERSION"
     implementation "androidx.preference:preference:$PREFERENCES_VERSION"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
+    implementation "androidx.core:core:$CORE_VERSION"
+    implementation "androidx.fragment:fragment:$FRAGMENT_VERSION"
+    implementation "androidx.lifecycle:lifecycle-common:$LIFECYCLE_VERSION"
+    implementation "androidx.lifecycle:lifecycle-livedata-core:$LIFECYCLE_VERSION"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$LIFECYCLE_VERSION"
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
     / * Unit testing * /
     testImplementation "junit:junit:$JUNIT_VERSION"
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION"
-    implementation "org.jetbrains.kotlin:kotlin-test:$KOTLIN_VERSION"
-    androidTestImplementation "androidx.test:core-ktx:$TEST_KTX_VERSION"
+    androidTestRuntimeOnly "org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION"
+    testRuntimeOnly "org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION"
     androidTestImplementation "androidx.test:rules:$TEST_KTX_VERSION"
+    androidTestImplementation 'androidx.test:core:1.5.0'
+    androidTestImplementation 'androidx.test:monitor:1.6.1'
+    androidTestImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
+
     / * mockito and livedata testing * /
     testImplementation "org.mockito:mockito-inline:$MOKITO_INLINE_VERSION"
     testImplementation "androidx.arch.core:core-testing:$CORE_TEST_VERSION"
+    testImplementation 'org.mockito:mockito-core:2.19.0'
+    testImplementation 'io.mockk:mockk-dsl-jvm:1.10.5'
     / * MockK * /
     testImplementation "io.mockk:mockk:$MOCKK_VERSION"
     androidTestImplementation "io.mockk:mockk-android:$MOCKK_VERSION"
     / * Android Espresso * /
-    androidTestImplementation "androidx.test.ext:junit:$TEST_JUNIT_VERSION"
     androidTestImplementation "androidx.test.espresso:espresso-core:$ESPRESSO_VERSION"
-    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$ESPRESSO_VERSION"
-    implementation "androidx.test.espresso:espresso-idling-resource:$ESPRESSO_VERSION"
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$ESPRESSO_VERSION"
     androidTestImplementation "androidx.test:runner:$TEST_RUNNER_VERSION"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$ESPRESSO_VERSION"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:$ESPRESSO_VERSION"
     androidTestImplementation "org.hamcrest:hamcrest:$HAMCREST_VERSION"
     / * Room database * /
-    implementation "androidx.room:room-runtime:$ROOM_VERSION"
-    kapt "androidx.room:room-compiler:$ROOM_VERSION"
+    runtimeOnly "androidx.room:room-runtime:$ROOM_VERSION"
     implementation "androidx.room:room-ktx:$ROOM_VERSION"
     / *Kodein Dependency Injection * /
     implementation "org.kodein.di:kodein-di-generic-jvm:$KODEIN_VERSION"
     implementation "org.kodein.di:kodein-di-framework-android-x:$KODEIN_VERSION"
+
+    implementation 'org.kodein.di:kodein-di-core-jvm:6.2.1'
+    implementation 'org.kodein.di:kodein-di-framework-android-core:6.2.1'
     / * jxl * /
     implementation "net.sourceforge.jexcelapi:jxl:$JEXCEL_VERSION"
 }

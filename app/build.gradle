@@ -88,4 +88,8 @@ dependencies {
     implementation "org.kodein.di:kodein-di-framework-android-x:$kodein_version"
     / * jxl * /
     implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
+    / * Permissions dispatcher * /
+    def dispatcher_ver = "4.9.2"
+    implementation "com.github.permissions-dispatcher:permissionsdispatcher:${dispatcher_ver}"
+    kapt "com.github.permissions-dispatcher:permissionsdispatcher-processor:${dispatcher_ver}"
 }

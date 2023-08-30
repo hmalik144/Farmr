@@ -1,5 +1,7 @@
 package com.appttude.h_mal.farmr.ui.robots
 
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions.scrollTo
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.ui.BaseTestRobot
@@ -33,7 +35,10 @@ class AddItemScreenRobot : BaseTestRobot() {
     fun setBreakTime(mins: Int) = fillEditText(R.id.breakEditText, mins.toString())
     fun setUnits(units: Float) = fillEditText(R.id.unitET, units.toString())
     fun setRateOfPay(rateOfPay: Float) = fillEditText(R.id.payrateET, rateOfPay.toString())
-    fun submit() = clickButton(R.id.submit)
+    fun submit() {
+        matchView(R.id.submit).perform(scrollTo())
+        clickButton(R.id.submit)
+    }
 
     fun assertTotalPay(pay: String) = matchText(R.id.totalpayval, pay)
     fun assertDuration(duration: String) = matchText(R.id.ShiftDuration, duration)

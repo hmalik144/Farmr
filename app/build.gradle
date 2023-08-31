@@ -64,10 +64,10 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:$MOKITO_INLINE_VERSION"
     testImplementation "androidx.arch.core:core-testing:$CORE_TEST_VERSION"
     testImplementation 'org.mockito:mockito-core:2.19.0'
-    testImplementation 'io.mockk:mockk-dsl-jvm:1.10.5'
     / * MockK * /
     testImplementation "io.mockk:mockk:$MOCKK_VERSION"
     androidTestImplementation "io.mockk:mockk-android:$MOCKK_VERSION"
+    testImplementation "io.mockk:mockk-dsl-jvm:$MOCKK_VERSION"
     / * Android Espresso * /
     androidTestImplementation "androidx.test.espresso:espresso-core:$ESPRESSO_VERSION"
     androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$ESPRESSO_VERSION"
@@ -80,9 +80,8 @@ dependencies {
     / *Kodein Dependency Injection * /
     implementation "org.kodein.di:kodein-di-generic-jvm:$KODEIN_VERSION"
     implementation "org.kodein.di:kodein-di-framework-android-x:$KODEIN_VERSION"
-
-    implementation 'org.kodein.di:kodein-di-core-jvm:6.2.1'
-    implementation 'org.kodein.di:kodein-di-framework-android-core:6.2.1'
+    implementation "org.kodein.di:kodein-di-core-jvm:$KODEIN_VERSION"
+    implementation "org.kodein.di:kodein-di-framework-android-core:$KODEIN_VERSION"
     / * jxl * /
     implementation "net.sourceforge.jexcelapi:jxl:$JEXCEL_VERSION"
 }

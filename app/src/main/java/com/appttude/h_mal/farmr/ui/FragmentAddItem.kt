@@ -119,61 +119,54 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
     }
 
     private fun setupViewAfterViewCreated() {
-//        val id = arguments?.let { FragmentAddItemArgs.fromBundle(it).id)
+        val id = arguments?.let { FragmentAddItemArgs.fromBundle(it).shiftId }
 
-        id = arguments?.getLong(ID)
         wholeView.hide()
 
-        val title = when (arguments?.containsKey(ID)) {
-            true -> {
-                // Since we are editing a shift lets load the shift data into the views
-                viewModel.getCurrentShift(arguments!!.getLong(ID))?.run {
-                    mLocationEditText.setText(description)
-                    mDateEditText.setText(date)
+        val title = id?.let {
+            // Since we are editing a shift lets load the shift data into the views
+            viewModel.getCurrentShift(arguments!!.getLong(ID))?.run {
+                mLocationEditText.setText(description)
+                mDateEditText.setText(date)
 
-                    // Set types
-                    mType = ShiftType.getEnumByType(type)
-                    mDescription = description
-                    mDate = date
-                    mPayRate = rateOfPay
+                // Set types
+                mType = ShiftType.getEnumByType(type)
+                mDescription = description
+                mDate = date
+                mPayRate = rateOfPay
 
-                    when (ShiftType.getEnumByType(type)) {
-                        ShiftType.HOURLY -> {
-                            mHourlyRadioButton.isChecked = true
-                            mPieceRadioButton.isChecked = false
-                            mTimeInEditText.setText(timeIn)
-                            mTimeOutEditText.setText(timeOut)
-                            mBreakEditText.setText(breakMins.toString())
-                            val durationText = "${duration.formatToTwoDpString()} Hours"
-                            mDurationTextView.text = durationText
+                when (ShiftType.getEnumByType(type)) {
+                    ShiftType.HOURLY -> {
+                        mHourlyRadioButton.isChecked = true
+                        mPieceRadioButton.isChecked = false
+                        mTimeInEditText.setText(timeIn)
+                        mTimeOutEditText.setText(timeOut)
+                        mBreakEditText.setText(breakMins.toString())
+                        val durationText = "${duration.formatToTwoDpString()} Hours"
+                        mDurationTextView.text = durationText
 
-                            // Set fields
-                            mTimeIn = timeIn
-                            mTimeOut = timeOut
-                            mBreaks = breakMins
-                        }
-
-                        ShiftType.PIECE -> {
-                            mHourlyRadioButton.isChecked = false
-                            mPieceRadioButton.isChecked = true
-                            mUnitEditText.setText(units.formatToTwoDpString())
-
-                            // Set piece rate units
-                            mUnits = units
-                        }
+                        // Set fields
+                        mTimeIn = timeIn
+                        mTimeOut = timeOut
+                        mBreaks = breakMins
                     }
-                    mPayRateEditText.setText(rateOfPay.formatAsCurrencyString())
-                    mTotalPayTextView.text = totalPay.formatAsCurrencyString()
 
-                    calculateTotalPay()
+                    ShiftType.PIECE -> {
+                        mHourlyRadioButton.isChecked = false
+                        mPieceRadioButton.isChecked = true
+                        mUnitEditText.setText(units.formatToTwoDpString())
+
+                        // Set piece rate units
+                        mUnits = units
+                    }
                 }
+                mPayRateEditText.setText(rateOfPay.formatAsCurrencyString())
+                mTotalPayTextView.text = totalPay.formatAsCurrencyString()
 
-                // Return title
-                getString(R.string.edit_item_title)
+                calculateTotalPay()
             }
-
-            else -> getString(R.string.add_item_title)
-        }
+            getString(R.string.edit_item_title)
+        } ?: getString(R.string.add_item_title)
         setTitle(title)
     }
 
@@ -267,6 +260,7 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
                         StringBuilder().append(mDuration).append(" hours").toString()
                     mDuration!! * mPayRate
                 }
+
                 ShiftType.PIECE -> {
                     (mUnits ?: 0f) * mPayRate
                 }

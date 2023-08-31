@@ -1,15 +1,10 @@
 package com.appttude.h_mal.farmr.ui
 
-import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
@@ -51,7 +46,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
         }
         productListView = view.findViewById(R.id.list_item_view)
         productListView.adapter = mAdapter
-        emptyView  = view.findViewById(R.id.empty_view)
+        emptyView = view.findViewById(R.id.empty_view)
 
         mAdapter.registerAdapterDataObserver(object : AdapterDataObserver() {
             override fun onChanged() {
@@ -114,16 +109,12 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
             }
 
             R.id.export_data -> {
-                if (checkStoragePermissions(activity)) {
-                    AlertDialog.Builder(context)
-                        .setTitle("Export?")
-                        .setMessage("Exporting current filtered data. Continue?")
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .setPositiveButton(android.R.string.ok) { _, _ -> exportData() }
-                        .create().show()
-                } else {
-                    displayToast("Storage permissions required")
-                }
+                AlertDialog.Builder(context)
+                    .setTitle("Export?")
+                    .setMessage("Exporting current filtered data. Continue?")
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(android.R.string.ok) { _, _ -> exportData() }
+                    .create().show()
                 return true
             }
 
@@ -175,13 +166,6 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
     }
 
     private fun exportData() {
-        val permission =
-            ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context, "Storage permissions not granted", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         val fileName = "shifthistory.xls"
         val file = File(requireContext().externalCacheDir, fileName)
 
@@ -199,46 +183,12 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
 
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        println("request code$requestCode")
-        if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
-            if (grantResults.isNotEmpty()
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED
-            ) {
-                exportDialog()
-            } else {
-                displayToast("Storage Permissions denied")
-            }
-        }
-    }
-
     private fun exportDialog() {
         AlertDialog.Builder(context)
             .setTitle("Export?")
             .setMessage("Exporting current filtered data. Continue?")
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(android.R.string.ok) { _, _ -> exportData() }.create().show()
-    }
-
-    private fun checkStoragePermissions(activity: Activity?): Boolean {
-        var status = false
-        val permission = ActivityCompat.checkSelfPermission(
-            activity!!,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission == PackageManager.PERMISSION_GRANTED) {
-            status = true
-        }
-        return status
-    }
-
-    companion object {
-        const val MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1
     }
 
     override fun onBackPressed(): Boolean {

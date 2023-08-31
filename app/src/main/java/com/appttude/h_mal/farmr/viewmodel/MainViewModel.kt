@@ -1,7 +1,5 @@
 package com.appttude.h_mal.farmr.viewmodel
 
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import androidx.annotation.RequiresPermission
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -206,7 +204,6 @@ class MainViewModel(
         refreshLiveData()
     }
 
-    @RequiresPermission(WRITE_EXTERNAL_STORAGE)
     fun createExcelSheet(file: File): File? {
         val wbSettings = WorkbookSettings().apply {
             locale = Locale("en", "EN")

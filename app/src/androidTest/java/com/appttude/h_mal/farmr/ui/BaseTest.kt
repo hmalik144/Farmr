@@ -14,7 +14,6 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.GrantPermissionRule
 import com.appttude.h_mal.farmr.application.TestAppClass
 import com.appttude.h_mal.farmr.ui.utils.getShifts
 import kotlinx.coroutines.runBlocking
@@ -35,9 +34,6 @@ open class BaseTest<A : Activity>(
     private lateinit var testApp: TestAppClass
     private lateinit var testActivity: Activity
     private lateinit var decorView: View
-
-    @get:Rule
-    var permissionRule = GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE)
 
     @Before
     open fun setUp() {

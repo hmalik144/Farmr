@@ -80,6 +80,8 @@ class ShiftListAdapter(
                 bundle = b,
                 name = "furtherinfo"
             )
+//            val nav = FragmentMainDirections.mainToFurtherInfo(data.id)
+//            fragment.navigateTo(nav)
         }
         editView.setOnClickListener {
             // Navigate to edit
@@ -88,6 +90,8 @@ class ShiftListAdapter(
                 bundle = b,
                 name = "additem"
             )
+//            val nav = FragmentMainDirections.mainToAddItem(data.id)
+//            fragment.navigateTo(nav)
         }
         view.setOnLongClickListener {
             AlertDialog.Builder(it.context)

@@ -37,7 +37,8 @@ class MainActivity : BaseActivity() {
             currentFragment.onBackPressed()
         } else {
             if (supportFragmentManager.backStackEntryCount > 1) {
-                popBackStack()
+                // Todo: go back
+//                goBack()
             } else {
                 super.onBackPressed()
             }

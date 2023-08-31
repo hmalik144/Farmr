@@ -18,6 +18,7 @@ import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.createDialog
 import com.appttude.h_mal.farmr.utils.displayToast
 import com.appttude.h_mal.farmr.utils.hide
+import com.appttude.h_mal.farmr.utils.navigateTo
 import com.appttude.h_mal.farmr.utils.navigateToFragment
 import com.appttude.h_mal.farmr.utils.show
 import com.appttude.h_mal.farmr.viewmodel.MainViewModel
@@ -57,7 +58,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
         })
 
         view.findViewById<FloatingActionButton>(R.id.fab1).setOnClickListener {
-            navigateToFragment(FragmentAddItem(), name = "additem")
+            navigateTo(R.id.main_to_addItem)
         }
     }
 
@@ -94,7 +95,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
             }
 
             R.id.filter_data -> {
-                navigateToFragment(FilterDataFragment(), name = "filterdata")
+                navigateTo(R.id.main_to_filterData)
                 return true
             }
 

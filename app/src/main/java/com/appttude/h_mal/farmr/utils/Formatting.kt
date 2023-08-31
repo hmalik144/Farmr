@@ -8,9 +8,8 @@ import java.util.Currency
 import java.util.Date
 import java.util.Locale
 
-fun String.formatToTwoDp(): Float {
-    val formattedString = String.format("%.2f", this)
-    return formattedString.toFloat()
+fun String.formatToTwoDp(): String {
+    return String.format("%.2f", this)
 }
 
 fun Float.formatToTwoDp(): Float {
@@ -27,7 +26,7 @@ fun Float.formatAsCurrencyString(): String? {
 }
 
 fun Float.formatToTwoDpString(): String {
-    return formatToTwoDp().toString()
+    return String.format("%.2f", this)
 }
 
 fun String.dateStringIsValid(): Boolean {

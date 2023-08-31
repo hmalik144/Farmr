@@ -14,6 +14,7 @@ import com.appttude.h_mal.farmr.base.BaseRecyclerAdapter
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.utils.ID
+import com.appttude.h_mal.farmr.utils.formatToTwoDp
 import com.appttude.h_mal.farmr.utils.generateView
 import com.appttude.h_mal.farmr.utils.navigateTo
 import com.appttude.h_mal.farmr.utils.navigateToFragment
@@ -48,7 +49,7 @@ class ShiftListAdapter(
         val typeText: String = data.type
         val descriptionText: String = data.description
         val dateText: String = data.date
-        val totalPayText: String = data.totalPay.toString()
+        val totalPayText: String = data.totalPay.formatToTwoDp().toString()
 
         descriptionTextView.text = descriptionText
         dateTextView.text = dateText

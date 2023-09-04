@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.appttude.h_mal.farmr.utils.generateView
 
-open class BaseRecyclerAdapter<T: Any>(
+open class BaseRecyclerAdapter<T : Any>(
     @LayoutRes private val emptyViewId: Int,
     @LayoutRes private val currentViewId: Int
-): RecyclerView.Adapter<ViewHolder>()  {
+) : RecyclerView.Adapter<ViewHolder>() {
     var list: List<T>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,6 +37,6 @@ open class BaseRecyclerAdapter<T: Any>(
     open fun bindEmptyView(view: View) {}
     open fun bindCurrentView(view: View, position: Int, data: T) {}
 
-    class EmptyViewHolder(itemView: View): ViewHolder(itemView)
-    class CurrentViewHolder(itemView: View): ViewHolder(itemView)
+    class EmptyViewHolder(itemView: View) : ViewHolder(itemView)
+    class CurrentViewHolder(itemView: View) : ViewHolder(itemView)
 }

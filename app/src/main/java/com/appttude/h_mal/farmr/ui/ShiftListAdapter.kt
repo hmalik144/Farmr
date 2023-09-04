@@ -3,34 +3,26 @@ package com.appttude.h_mal.farmr.ui
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.ViewGroup
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import com.appttude.h_mal.farmr.R
-import com.appttude.h_mal.farmr.base.BaseRecyclerAdapter
+import com.appttude.h_mal.farmr.base.BaseListAdapter
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.utils.ID
-import com.appttude.h_mal.farmr.utils.generateView
 import com.appttude.h_mal.farmr.utils.navigateToFragment
 
 class ShiftListAdapter(
     private val fragment: Fragment,
+    emptyView: View,
     private val longPressCallback: (Long) -> Unit
-) : ListAdapter<ShiftObject, BaseRecyclerAdapter.CurrentViewHolder>(diffCallBack) {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): BaseRecyclerAdapter.CurrentViewHolder {
-        val currentViewHolder = parent.generateView(R.layout.list_item_1)
-        return BaseRecyclerAdapter.CurrentViewHolder(currentViewHolder)
-    }
+) : BaseListAdapter<ShiftObject>(diffCallBack, R.layout.list_item_1, emptyView) {
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: BaseRecyclerAdapter.CurrentViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CurrentViewHolder, position: Int) {
         val view = holder.itemView
         val data = getItem(position)
 

@@ -22,6 +22,7 @@ class SplashScreen : Activity() {
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(i)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            this.finish()
         }, SPLASH_TIME_OUT)
     }
 

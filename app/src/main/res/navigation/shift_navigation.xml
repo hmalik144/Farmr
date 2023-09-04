@@ -27,7 +27,6 @@
         tools:layout="@layout/fragment_add_item" >
         <argument
             android:name="shiftId"
-            app:nullable="true"
             app:argType="long" />
     </fragment>
     <fragment

@@ -76,12 +76,12 @@ class ShiftListAdapter(
 
         view.setOnClickListener {
             // Navigate to further info
-            val nav = FurtherInfoFragmentDirections.mainToFurtherInfo(data.id)
+            val nav = FragmentMainDirections.mainToFurtherInfo(data.id)
             fragment.navigateTo(nav)
         }
         editView.setOnClickListener {
             // Navigate to edit
-            val nav = FragmentAddItemDirections.mainToAddItem(data.id)
+            val nav = FragmentMainDirections.mainToAddItem(data.id)
             fragment.navigateTo(nav)
         }
         view.setOnLongClickListener {

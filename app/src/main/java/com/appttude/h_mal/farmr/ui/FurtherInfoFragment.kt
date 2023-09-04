@@ -56,7 +56,7 @@ class FurtherInfoFragment : BaseFragment<InfoViewModel>(R.layout.fragment_futher
         val id = FurtherInfoFragmentArgs.fromBundle(requireArguments()).shiftId
 
         editButton.setOnClickListener {
-            val nav = FragmentAddItemDirections.furtherInfoToAddItem(id)
+            val nav = FurtherInfoFragmentDirections.furtherInfoToAddItem(id)
             navigateTo(nav)
         }
 

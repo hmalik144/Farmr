@@ -16,6 +16,7 @@ import com.appttude.h_mal.farmr.base.BaseFragment
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.ID
+import com.appttude.h_mal.farmr.utils.SHIFT_ID
 import com.appttude.h_mal.farmr.utils.createDialog
 import com.appttude.h_mal.farmr.utils.displayToast
 import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
@@ -119,13 +120,14 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
     }
 
     private fun setupViewAfterViewCreated() {
-        val id = arguments?.let { FragmentAddItemArgs.fromBundle(it).shiftId }
+        val id = arguments?.takeIf { it.containsKey(SHIFT_ID) }
+            ?.let { FragmentAddItemArgs.fromBundle(it).shiftId }
 
         wholeView.hide()
 
         val title = id?.let {
             // Since we are editing a shift lets load the shift data into the views
-            viewModel.getCurrentShift(arguments!!.getLong(ID))?.run {
+            viewModel.getCurrentShift(id)?.run {
                 mLocationEditText.setText(description)
                 mDateEditText.setText(date)
 

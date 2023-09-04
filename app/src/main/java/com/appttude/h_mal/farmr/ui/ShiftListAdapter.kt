@@ -13,6 +13,7 @@ import com.appttude.h_mal.farmr.base.BaseListAdapter
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.utils.ID
+import com.appttude.h_mal.farmr.utils.formatToTwoDpString
 import com.appttude.h_mal.farmr.utils.navigateToFragment
 
 class ShiftListAdapter(
@@ -39,7 +40,7 @@ class ShiftListAdapter(
         val typeText: String = data.type
         val descriptionText: String = data.description
         val dateText: String = data.date
-        val totalPayText: String = data.totalPay.toString()
+        val totalPayText: String = data.totalPay.formatToTwoDpString()
 
         descriptionTextView.text = descriptionText
         dateTextView.text = dateText

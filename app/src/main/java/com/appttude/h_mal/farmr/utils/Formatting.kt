@@ -26,7 +26,7 @@ fun Float.formatAsCurrencyString(): String? {
 }
 
 fun Float.formatToTwoDpString(): String {
-    return formatToTwoDp().toString()
+    return toBigDecimal().setScale(2).toString()
 }
 
 fun String.dateStringIsValid(): Boolean {

@@ -41,20 +41,13 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mAdapter = ShiftListAdapter(this) {
+        emptyView = view.findViewById(R.id.empty_view)
+        productListView = view.findViewById(R.id.list_item_view)
+
+        mAdapter = ShiftListAdapter(this, emptyView) {
             viewModel.deleteShift(it)
         }
-        productListView = view.findViewById(R.id.list_item_view)
         productListView.adapter = mAdapter
-        emptyView = view.findViewById(R.id.empty_view)
-
-        mAdapter.registerAdapterDataObserver(object : AdapterDataObserver() {
-            override fun onChanged() {
-                super.onChanged()
-                if (mAdapter.itemCount == 0) emptyView.show()
-                else emptyView.hide()
-            }
-        })
 
         view.findViewById<FloatingActionButton>(R.id.fab1).setOnClickListener {
             navigateToFragment(FragmentAddItem(), name = "additem")

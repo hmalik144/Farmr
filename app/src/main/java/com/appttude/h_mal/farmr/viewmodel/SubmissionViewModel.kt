@@ -1,6 +1,8 @@
 package com.appttude.h_mal.farmr.viewmodel
 
 import com.appttude.h_mal.farmr.data.Repository
+import com.appttude.h_mal.farmr.data.room.converters.DateConverter
+import com.appttude.h_mal.farmr.data.room.converters.TimeConverter
 import com.appttude.h_mal.farmr.model.Shift
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Success
@@ -17,6 +19,9 @@ class SubmissionViewModel(
     private val repository: Repository
 ) : ShiftViewModel(repository) {
 
+    private val dateConverter = DateConverter()
+    private val timeConverter = TimeConverter()
+
     fun insertHourlyShift(
         description: String,
         date: String,
@@ -26,7 +31,7 @@ class SubmissionViewModel(
         breakMins: Int?,
     ) {
         // Validate inputs from the edit texts
-        (description.length > 3).validateField {
+        (description.trim().length > 3).validateField {
             onError("Description length should be longer")
             return
         }
@@ -53,7 +58,7 @@ class SubmissionViewModel(
 
         val result = insertShiftIntoDatabase(
             ShiftType.HOURLY,
-            description,
+            description.trim(),
             date,
             rateOfPay.formatToTwoDp(),
             timeIn,
@@ -73,7 +78,7 @@ class SubmissionViewModel(
         rateOfPay: Float
     ) {
         // Validate inputs from the edit texts
-        (description.length > 3).validateField {
+        (description.trim().length > 3).validateField {
             onError("Description length should be longer")
             return
         }
@@ -92,7 +97,7 @@ class SubmissionViewModel(
 
         val result = insertShiftIntoDatabase(
             type = ShiftType.PIECE,
-            description = description,
+            description = description.trim(),
             date = date,
             rateOfPay = rateOfPay.formatToTwoDp(),
             null,
@@ -177,72 +182,72 @@ class SubmissionViewModel(
         breakMins: Int? = null,
         units: Float? = null,
     ): Boolean {
-        val currentShift = repository.readSingleShiftFromDatabase(id)?.copyToShift()
+        val currentShift = repository.readSingleShiftFromDatabase(id)
             ?: throw IOException("Cannot update shift as it does not exist")
+
+        val mDate = date ?: dateConverter.fromDate(currentShift.date)
+        val mTimeIn = timeIn ?: timeConverter.fromTime(currentShift.timeIn)
+        val mTimeOut = timeOut ?: timeConverter.fromTime(currentShift.timeIn)
 
         val shift = when (type) {
             ShiftType.HOURLY -> {
                 // Shift type has changed so mandatory fields for hourly shift are now required as well
-                val insertTimeIn =
-                    (timeIn ?: currentShift.timeIn) ?: throw IOException("No time in inserted")
-                val insertTimeOut =
-                    (timeOut ?: currentShift.timeOut) ?: throw IOException("No time out inserted")
                 Shift(
                     description = description ?: currentShift.description,
-                    date = date ?: currentShift.date,
-                    timeIn = insertTimeIn,
-                    timeOut = insertTimeOut,
+                    date = mDate,
+                    timeIn = mTimeIn,
+                    timeOut = mTimeOut,
                     breakMins = breakMins ?: currentShift.breakMins,
-                    rateOfPay = rateOfPay ?: currentShift.rateOfPay
+                    rateOfPay = (rateOfPay ?: currentShift.payRate) ?: 0f
                 )
             }
 
             ShiftType.PIECE -> {
                 // Shift type has changed so mandatory fields for piece rate shift are now required as well
-                val insertUnits = (units ?: currentShift.units)
-                    ?: throw IOException("Units must be inserted for piece rate shifts")
                 Shift(
                     description = description ?: currentShift.description,
-                    date = date ?: currentShift.date,
-                    units = insertUnits,
-                    rateOfPay = rateOfPay ?: currentShift.rateOfPay
+                    date = mDate,
+                    units = (units ?: currentShift.units) ?: 0f,
+                    rateOfPay = (rateOfPay ?: currentShift.payRate) ?: 0f
                 )
             }
 
             else -> {
                 if (timeIn == null && timeOut == null && units == null && breakMins == null && rateOfPay == null) {
                     // Updates to description or date field
-                    currentShift.copy(
-                        description = description ?: currentShift.description,
-                        date = date ?: currentShift.date,
+                    Shift(
+                        ShiftType.getEnumByType(currentShift.type),
+                        description ?: currentShift.description,
+                        mDate,
+                        mTimeIn,
+                        mTimeOut,
+                        currentShift.duration,
+                        currentShift.breakMins,
+                        currentShift.units,
+                        currentShift.payRate ?: 0f,
+                        currentShift.totalPay ?: 0f
                     )
                 } else {
                     // Updating shifts where shift type has remained the same
-                    when (currentShift.type) {
+                    when (ShiftType.getEnumByType(currentShift.type)) {
                         ShiftType.HOURLY -> {
-                            val insertTimeIn = (timeIn ?: currentShift.timeIn) ?: throw IOException(
-                                "No time in inserted"
-                            )
-                            val insertTimeOut = (timeOut ?: currentShift.timeOut)
-                                ?: throw IOException("No time out inserted")
                             Shift(
                                 description = description ?: currentShift.description,
-                                date = date ?: currentShift.date,
-                                timeIn = insertTimeIn,
-                                timeOut = insertTimeOut,
+                                date = mDate,
+                                timeIn = mTimeIn,
+                                timeOut = mTimeOut,
                                 breakMins = breakMins ?: currentShift.breakMins,
-                                rateOfPay = rateOfPay ?: currentShift.rateOfPay
+                                rateOfPay = (rateOfPay ?: currentShift.payRate) ?: 0f
                             )
                         }
 
                         ShiftType.PIECE -> {
                             val insertUnits = (units ?: currentShift.units)
-                                ?: throw IOException("Units must be inserted for piece rate shifts")
                             Shift(
                                 description = description ?: currentShift.description,
-                                date = date ?: currentShift.date,
-                                units = insertUnits,
-                                rateOfPay = rateOfPay ?: currentShift.rateOfPay
+                                date = mDate,
+                                units = (insertUnits) ?: 0f,
+                                rateOfPay = (rateOfPay ?: currentShift.payRate) ?: 0f
                             )
                         }
                     }

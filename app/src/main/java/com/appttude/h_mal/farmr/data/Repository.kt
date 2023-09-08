@@ -1,6 +1,8 @@
 package com.appttude.h_mal.farmr.data
 
+import androidx.lifecycle.LiveData
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
+import com.appttude.h_mal.farmr.data.room.entity.ShiftEntity
 import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.Shift
 import com.appttude.h_mal.farmr.model.Sortable
@@ -8,8 +10,8 @@ import com.appttude.h_mal.farmr.model.Sortable
 interface Repository {
     fun insertShiftIntoDatabase(shift: Shift): Boolean
     fun updateShiftIntoDatabase(id: Long, shift: Shift): Boolean
-    fun readShiftsFromDatabase(): List<ShiftObject>?
-    fun readSingleShiftFromDatabase(id: Long): ShiftObject?
+    fun readShiftsFromDatabase(): LiveData<List<ShiftEntity>>
+    fun readSingleShiftFromDatabase(id: Long): ShiftEntity?
     fun deleteSingleShiftFromDatabase(id: Long): Boolean
     fun deleteAllShiftsFromDatabase(): Boolean
     fun retrieveSortAndOrderFromPref(): Pair<Sortable?, Order?>

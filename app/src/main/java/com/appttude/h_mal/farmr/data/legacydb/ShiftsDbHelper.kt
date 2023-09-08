@@ -33,10 +33,10 @@ class ShiftsDbHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     companion object {
-        private const val DATABASE_NAME = "shifts.db"
+        const val DATABASE_NAME = "shifts.db"
         private const val DATABASE_VERSION = 4
         private const val DEFAULT_TEXT = "Hourly"
-        private const val SQL_CREATE_PRODUCTS_TABLE_2 = ("CREATE TABLE " + ShiftsEntry.TABLE_NAME_EXPORT + " ("
+        const val SQL_CREATE_PRODUCTS_TABLE_2 = ("CREATE TABLE " + ShiftsEntry.TABLE_NAME_EXPORT + " ("
                 + ShiftsEntry.COLUMN_SHIFT_DESCRIPTION + " TEXT NOT NULL, "
                 + ShiftsEntry.COLUMN_SHIFT_DATE + " DATE NOT NULL, "
                 + ShiftsEntry.COLUMN_SHIFT_TIME_IN + " TIME NOT NULL, "

@@ -13,6 +13,8 @@ import androidx.core.widget.doAfterTextChanged
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BackPressedListener
 import com.appttude.h_mal.farmr.base.BaseFragment
+import com.appttude.h_mal.farmr.data.room.converters.DateConverter
+import com.appttude.h_mal.farmr.data.room.converters.TimeConverter
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.ID
@@ -30,6 +32,9 @@ import com.appttude.h_mal.farmr.viewmodel.SubmissionViewModel
 
 class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_item),
     RadioGroup.OnCheckedChangeListener, BackPressedListener {
+
+    private val dateConverter = DateConverter()
+    private val timeConverter = TimeConverter()
 
     private lateinit var mHourlyRadioButton: RadioButton
     private lateinit var mPieceRadioButton: RadioButton
@@ -126,41 +131,41 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
                 // Since we are editing a shift lets load the shift data into the views
                 viewModel.getCurrentShift(arguments!!.getLong(ID))?.run {
                     mLocationEditText.setText(description)
-                    mDateEditText.setText(date)
+                    mDateEditText.setText(dateConverter.fromDate(date))
 
                     // Set types
                     mType = ShiftType.getEnumByType(type)
                     mDescription = description
-                    mDate = date
-                    mPayRate = rateOfPay
+                    mDate = dateConverter.fromDate(date)
+                    mPayRate = payRate!!
 
                     when (ShiftType.getEnumByType(type)) {
                         ShiftType.HOURLY -> {
                             mHourlyRadioButton.isChecked = true
                             mPieceRadioButton.isChecked = false
-                            mTimeInEditText.setText(timeIn)
-                            mTimeOutEditText.setText(timeOut)
+                            mTimeInEditText.setText(timeConverter.fromTime(timeIn))
+                            mTimeOutEditText.setText(timeConverter.fromTime(timeOut))
                             mBreakEditText.setText(breakMins.toString())
                             val durationText = "${duration.formatToTwoDpString()} Hours"
                             mDurationTextView.text = durationText
 
                             // Set fields
-                            mTimeIn = timeIn
-                            mTimeOut = timeOut
+                            mTimeIn = timeConverter.fromTime(timeIn)
+                            mTimeOut = timeConverter.fromTime(timeOut)
                             mBreaks = breakMins
                         }
 
                         ShiftType.PIECE -> {
                             mHourlyRadioButton.isChecked = false
                             mPieceRadioButton.isChecked = true
-                            mUnitEditText.setText(units.formatToTwoDpString())
+                            mUnitEditText.setText(units?.formatToTwoDpString())
 
                             // Set piece rate units
                             mUnits = units
                         }
                     }
-                    mPayRateEditText.setText(rateOfPay.formatAsCurrencyString())
-                    mTotalPayTextView.text = totalPay.formatAsCurrencyString()
+                    mPayRateEditText.setText(payRate.formatAsCurrencyString())
+                    mTotalPayTextView.text = totalPay?.formatAsCurrencyString()
 
                     calculateTotalPay()
                 }

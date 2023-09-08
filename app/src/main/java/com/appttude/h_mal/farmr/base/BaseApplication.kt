@@ -4,6 +4,7 @@ import android.app.Application
 import com.appttude.h_mal.farmr.data.RepositoryImpl
 import com.appttude.h_mal.farmr.data.legacydb.LegacyDatabase
 import com.appttude.h_mal.farmr.data.prefs.PreferenceProvider
+import com.appttude.h_mal.farmr.data.room.AppDatabase
 import com.appttude.h_mal.farmr.viewmodel.ApplicationViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -26,6 +27,6 @@ abstract class BaseApplication() : Application(), KodeinAware {
         bind() from provider { ApplicationViewModelFactory(instance()) }
     }
 
-    abstract fun createDatabase(): LegacyDatabase
+    abstract fun createDatabase(): AppDatabase
     abstract fun createPrefs(): PreferenceProvider
 }

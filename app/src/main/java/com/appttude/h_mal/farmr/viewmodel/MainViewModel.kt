@@ -1,7 +1,6 @@
 package com.appttude.h_mal.farmr.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.appttude.h_mal.farmr.data.Repository
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
@@ -16,6 +15,7 @@ import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_TYPE
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_UNIT
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry._ID
+import com.appttude.h_mal.farmr.data.room.entity.ShiftEntity
 import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Sortable
@@ -37,23 +37,26 @@ class MainViewModel(
     private val repository: Repository
 ) : ShiftViewModel(repository) {
 
-    private val _shiftLiveData = MutableLiveData<List<ShiftObject>>()
-    private val shiftLiveData: LiveData<List<ShiftObject>> = _shiftLiveData
+    private val shiftLiveData: LiveData<List<ShiftEntity>> = repository.readShiftsFromDatabase()
 
     private var mSort: Sortable = Sortable.ID
     private var mOrder: Order = Order.ASCENDING
 
-    private val observer = Observer<List<ShiftObject>> {
-        it?.let {
-            val result = it.applyFilters().sortList(mSort, mOrder)
-            onSuccess(result)
-        }
+    private val observer = Observer<List<ShiftEntity>> {
+        it?.let { updateFiltrationAndPostResults(it) }
     }
 
     init {
-        // Load shifts into live data when view model has been instantiated
-        refreshLiveData()
         shiftLiveData.observeForever(observer)
+    }
+
+    private fun updateFiltrationAndPostResults(entities: List<ShiftEntity>) {
+        val result = entities.mapToShiftObjects().applyFilters().sortList(mSort, mOrder)
+        onSuccess(result)
+    }
+
+    private fun List<ShiftEntity>.mapToShiftObjects(): List<ShiftObject> {
+        return map { i -> i.convertToShiftObject() }
     }
 
     private fun List<ShiftObject>.applyFilters(): List<ShiftObject> {
@@ -75,14 +78,21 @@ class MainViewModel(
         }
     }
 
-    private fun comparedStringsContains(first: String?, second: String?): Boolean {
-        first?.let {
-            (second?.contains(it))?.let { c -> return c }
+    /*
+     * Check if string compareWith contains compareAgainst
+     */
+    private fun comparedStringsContains(compareWith: String?, compareAgainst: String?): Boolean {
+        compareWith?.let {
+            (compareAgainst?.contains(it))?.let { c -> return c }
         }
 
-        return comparedStrings(first, second)
+        return comparedStrings(compareWith, compareAgainst)
     }
 
+    /*
+     * check if date [compareWith] fall between two dates
+     * if fromDate or toDate is null then it will take today's date for comparison
+     */
     private fun isBetween(fromDate: String?, toDate: String?, compareWith: String): Boolean? {
         val first = fromDate?.convertDateString()
         val second = toDate?.convertDateString()
@@ -96,7 +106,9 @@ class MainViewModel(
         return compareDate.after(first) && compareDate.before(second)
     }
 
-
+    /*
+     * When view-model is cleared we stop observing any livedata
+     */
     override fun onCleared() {
         shiftLiveData.removeObserver(observer)
         super.onCleared()
@@ -132,7 +144,7 @@ class MainViewModel(
         var totalUnits = 0f
         var totalPay = 0f
         var lines = 0
-        _shiftLiveData.value?.applyFilters()?.forEach {
+        shiftLiveData.value?.mapToShiftObjects()?.applyFilters()?.forEach {
             lines += 1
             totalDuration += it.duration
             when (ShiftType.getEnumByType(it.type)) {
@@ -156,16 +168,12 @@ class MainViewModel(
     fun deleteShift(id: Long) {
         if (!repository.deleteSingleShiftFromDatabase(id)) {
             onError("Failed to delete shift")
-        } else {
-            refreshLiveData()
         }
     }
 
     fun deleteAllShifts() {
         if (!repository.deleteAllShiftsFromDatabase()) {
             onError("Failed to delete all shifts from database")
-        } else {
-            refreshLiveData()
         }
     }
 
@@ -194,8 +202,12 @@ class MainViewModel(
         return stringBuilder.toString()
     }
 
+    /*
+     * After operations such as updating filtering or sorting
+     * we update the data we sent to the ui
+     */
     fun refreshLiveData() {
-        repository.readShiftsFromDatabase()?.let { _shiftLiveData.postValue(it) }
+        shiftLiveData.value?.let { updateFiltrationAndPostResults(it) }
     }
 
     fun clearFilters() {
@@ -204,6 +216,9 @@ class MainViewModel(
         refreshLiveData()
     }
 
+    /*
+     * Build a .csv file to be exported
+     */
     fun createExcelSheet(file: File): File? {
         val wbSettings = WorkbookSettings().apply {
             locale = Locale("en", "EN")
@@ -232,7 +247,7 @@ class MainViewModel(
                 return null
             }
             val sortAndOrder = getSortAndOrder()
-            val data = shiftLiveData.value!!.applyFilters()
+            val data = shiftLiveData.value!!.mapToShiftObjects().applyFilters()
                 .sortList(sortAndOrder.first, sortAndOrder.second)
             var currentRow = 0
             val cells = data.map { shift ->

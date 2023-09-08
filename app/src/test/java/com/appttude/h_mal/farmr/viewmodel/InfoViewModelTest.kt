@@ -2,6 +2,7 @@ package com.appttude.h_mal.farmr.viewmodel
 
 import android.os.Bundle
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
+import com.appttude.h_mal.farmr.data.room.entity.ShiftEntity
 import com.appttude.h_mal.farmr.utils.ID
 import io.mockk.every
 import io.mockk.mockk
@@ -16,7 +17,7 @@ class InfoViewModelTest : ShiftViewModelTest<InfoViewModel>() {
     fun retrieveData_validBundleAndId_successfulRetrieval() {
         // Arrange
         val id = anyLong()
-        val shift = mockk<ShiftObject>()
+        val shift = mockk<ShiftEntity>()
         val bundle = mockk<Bundle>()
 
         // Act
@@ -25,7 +26,7 @@ class InfoViewModelTest : ShiftViewModelTest<InfoViewModel>() {
         viewModel.retrieveData(bundle)
 
         // Assert
-        assertIs<ShiftObject>(retrieveCurrentData())
+        assertIs<ShiftEntity>(retrieveCurrentData())
         assertEquals(
             retrieveCurrentData(),
             shift
@@ -36,7 +37,7 @@ class InfoViewModelTest : ShiftViewModelTest<InfoViewModel>() {
     fun retrieveData_noValidBundleAndId_unsuccessfulRetrieval() {
         // Arrange
         val id = anyLong()
-        val shift = mockk<ShiftObject>()
+        val shift = mockk<ShiftEntity>()
         val bundle = mockk<Bundle>()
 
         // Act

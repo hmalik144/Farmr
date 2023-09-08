@@ -1,50 +1,77 @@
 package com.appttude.h_mal.farmr.data
 
+import androidx.lifecycle.LiveData
+import androidx.room.Room
 import com.appttude.h_mal.farmr.data.legacydb.LegacyDatabase
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract
 import com.appttude.h_mal.farmr.data.prefs.PreferenceProvider
+import com.appttude.h_mal.farmr.data.room.AppDatabase
+import com.appttude.h_mal.farmr.data.room.entity.ShiftEntity
 import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.Shift
 import com.appttude.h_mal.farmr.model.Sortable
+import com.appttude.h_mal.farmr.utils.dateStringIsValid
+import com.appttude.h_mal.farmr.utils.timeStringIsValid
 
 class RepositoryImpl(
-    private val legacyDatabase: LegacyDatabase,
+    roomDatabase: AppDatabase,
     private val preferenceProvider: PreferenceProvider
 ): Repository {
+
+    private val shiftDao = roomDatabase.getShiftDao()
+
     override fun insertShiftIntoDatabase(shift: Shift): Boolean {
-        return legacyDatabase.insertShiftDataIntoDatabase(shift) != null
+        val shiftEntity = shift.convertToShiftEntity()
+        return shiftDao.upsertFullShift(shiftEntity) > 0
     }
 
     override fun updateShiftIntoDatabase(id: Long, shift: Shift): Boolean {
-        return legacyDatabase.updateShiftDataIntoDatabase(
-            id = id,
-            typeString = shift.type.type,
-            descriptionString = shift.description,
-            dateString = shift.date,
-            timeInString = shift.timeIn ?: "",
-            timeOutString = shift.timeOut ?: "",
-            duration = shift.duration ?: 0f,
-            breaks = shift.breakMins ?: 0,
-            units = shift.units ?: 0f,
-            payRate = shift.rateOfPay,
-            totalPay = shift.totalPay
-        ) == 1
+        if (shift.description.isBlank() || shift.description.trim().length < 3) {
+            throw IllegalArgumentException("description required")
+        }
+        if (!shift.date.dateStringIsValid()) {
+                throw IllegalArgumentException("date required")
+        }
+        shift.timeIn?.takeIf { !it.timeStringIsValid() }?.let {
+            throw IllegalArgumentException("time in required")
+        }
+        shift.timeOut?.takeIf { !it.timeStringIsValid() }?.let {
+            throw IllegalArgumentException("time out required")
+        }
+        shift.breakMins?.takeIf { it < 0 }?.let {
+            throw IllegalArgumentException("break required")
+        }
+        if (shift.timeIn != null || shift.timeOut != null) {
+            if (shift.duration == null) throw IllegalArgumentException("Duration required")
+        }
+        shift.units?.takeIf { it < 0 }?.let {
+            throw IllegalArgumentException("Units required")
+        }
+        if (shift.rateOfPay < 0) {
+            throw IllegalArgumentException("Rate of pay required")
+        }
+        if (shift.totalPay < 0) {
+            throw IllegalArgumentException("Total pay required")
+        }
+        val shiftEntity = shift.convertToShiftEntity(id)
+        return shiftDao.upsertFullShift(shiftEntity) > 0
     }
 
-    override fun readShiftsFromDatabase(): List<ShiftObject>? {
-        return legacyDatabase.readShiftsFromDatabase()
+    override fun readShiftsFromDatabase(): LiveData<List<ShiftEntity>> {
+        return shiftDao.getAllFullShift()
     }
 
-    override fun readSingleShiftFromDatabase(id: Long): ShiftObject? {
-        return legacyDatabase.readSingleShiftWithId(id)
+    override fun readSingleShiftFromDatabase(id: Long): ShiftEntity? {
+        return shiftDao.getCurrentFullShiftSingle(id)
     }
 
     override fun deleteSingleShiftFromDatabase(id: Long): Boolean {
-        return legacyDatabase.deleteSingleShift(id) == 1
+        return shiftDao.deleteShift(id) == 1
     }
 
     override fun deleteAllShiftsFromDatabase(): Boolean {
-        return legacyDatabase.deleteAllShiftsInDatabase() > 0
+        return shiftDao.deleteAllShifts() > 0
     }
 
     override fun retrieveSortAndOrderFromPref(): Pair<Sortable?, Order?> {

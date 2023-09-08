@@ -2,7 +2,7 @@ package com.appttude.h_mal.farmr.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
+import com.appttude.h_mal.farmr.data.room.entity.ShiftEntity
 import com.appttude.h_mal.farmr.model.ShiftType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -42,108 +42,108 @@ fun sleep(millis: Long = 1000) {
 }
 
 fun getShifts() = listOf(
-    ShiftObject(
-        ArgumentMatchers.anyLong(),
-        ShiftType.HOURLY.type,
+    ShiftEntity(
         "Day one",
         "2023-08-01",
         "12:00",
         "13:00",
-        1f,
         ArgumentMatchers.anyInt(),
+        1f,
+        ShiftType.HOURLY.type,
         ArgumentMatchers.anyFloat(),
         10f,
-        10f
-    ),
-    ShiftObject(
+        10f,
         ArgumentMatchers.anyLong(),
-        ShiftType.HOURLY.type,
+    ),
+    ShiftEntity(
         "Day two",
         "2023-08-02",
         "12:00",
         "13:00",
-        1f,
         ArgumentMatchers.anyInt(),
+        1f,
+        ShiftType.HOURLY.type,
         ArgumentMatchers.anyFloat(),
         10f,
-        10f
-    ),
-    ShiftObject(
+        10f,
         ArgumentMatchers.anyLong(),
-        ShiftType.HOURLY.type,
+    ),
+    ShiftEntity(
         "Day three",
         "2023-08-03",
         "12:00",
-        "13:00",
-        1f,
+        "14:30",
         30,
+        2f,
+        ShiftType.HOURLY.type,
         ArgumentMatchers.anyFloat(),
         10f,
-        5f
-    ),
-    ShiftObject(
+        20f,
         ArgumentMatchers.anyLong(),
-        ShiftType.HOURLY.type,
+    ),
+    ShiftEntity(
         "Day four",
         "2023-08-04",
         "12:00",
-        "13:00",
-        1f,
+        "14:30",
         30,
+        2f,
+        ShiftType.HOURLY.type,
         ArgumentMatchers.anyFloat(),
         10f,
-        5f
-    ),
-    ShiftObject(
+        20f,
         ArgumentMatchers.anyLong(),
-        ShiftType.PIECE.type,
+    ),
+    ShiftEntity(
         "Day five",
         "2023-08-05",
         ArgumentMatchers.anyString(),
         ArgumentMatchers.anyString(),
-        ArgumentMatchers.anyFloat(),
         ArgumentMatchers.anyInt(),
+        ArgumentMatchers.anyFloat(),
+        ShiftType.PIECE.type,
         1f,
         10f,
-        10f
-    ),
-    ShiftObject(
+        10f,
         ArgumentMatchers.anyLong(),
-        ShiftType.PIECE.type,
+    ),
+    ShiftEntity(
         "Day six",
         "2023-08-06",
         ArgumentMatchers.anyString(),
         ArgumentMatchers.anyString(),
-        ArgumentMatchers.anyFloat(),
         ArgumentMatchers.anyInt(),
+        ArgumentMatchers.anyFloat(),
+        ShiftType.PIECE.type,
         1f,
         10f,
-        10f
-    ),
-    ShiftObject(
+        10f,
         ArgumentMatchers.anyLong(),
-        ShiftType.PIECE.type,
+    ),
+    ShiftEntity(
         "Day seven",
         "2023-08-07",
         ArgumentMatchers.anyString(),
         ArgumentMatchers.anyString(),
-        ArgumentMatchers.anyFloat(),
         ArgumentMatchers.anyInt(),
+        ArgumentMatchers.anyFloat(),
+        ShiftType.PIECE.type,
         1f,
         10f,
-        10f
-    ),
-    ShiftObject(
+        10f,
         ArgumentMatchers.anyLong(),
-        ShiftType.PIECE.type,
+    ),
+    ShiftEntity(
         "Day eight",
         "2023-08-08",
         ArgumentMatchers.anyString(),
         ArgumentMatchers.anyString(),
-        ArgumentMatchers.anyFloat(),
         ArgumentMatchers.anyInt(),
+        ArgumentMatchers.anyFloat(),
+        ShiftType.PIECE.type,
         1f,
         10f,
-        10f
+        10f,
+        ArgumentMatchers.anyLong(),
     ),
 )

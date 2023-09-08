@@ -1,5 +1,8 @@
 package com.appttude.h_mal.farmr.model
 
+import com.appttude.h_mal.farmr.data.room.converters.DateConverter
+import com.appttude.h_mal.farmr.data.room.converters.TimeConverter
+import com.appttude.h_mal.farmr.data.room.entity.ShiftEntity
 import com.appttude.h_mal.farmr.utils.calculateDuration
 import com.appttude.h_mal.farmr.utils.formatToTwoDp
 
@@ -15,6 +18,39 @@ data class Shift(
     val rateOfPay: Float,
     val totalPay: Float
 ) {
+
+    fun convertToShiftEntity(): ShiftEntity {
+        val timeConverter = TimeConverter()
+        return ShiftEntity(
+            description = description,
+            type = type.type,
+            date = DateConverter().toDate(date),
+            timeIn = timeConverter.toTime(timeIn),
+            timeOut = timeConverter.toTime(timeOut),
+            duration = duration ?: 0f,
+            breakMins = breakMins ?: 0,
+            units = units ?: 0f,
+            payRate = rateOfPay,
+            totalPay = totalPay
+        )
+    }
+
+    fun convertToShiftEntity(id: Long): ShiftEntity {
+        val timeConverter = TimeConverter()
+        return ShiftEntity(
+            id = id,
+            description = description,
+            type = type.type,
+            date = DateConverter().toDate(date),
+            timeIn = timeConverter.toTime(timeIn),
+            timeOut = timeConverter.toTime(timeOut),
+            duration = duration ?: 0f,
+            breakMins = breakMins ?: 0,
+            units = units ?: 0f,
+            payRate = rateOfPay,
+            totalPay = totalPay
+        )
+    }
     companion object {
         // Invocation for Hourly
         operator fun invoke(
@@ -60,6 +96,4 @@ data class Shift(
             (units * rateOfPay).formatToTwoDp()
         )
     }
-
-
 }

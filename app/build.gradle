@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'kotlin-kapt'
 
 def relStorePassword = System.getenv("RELEASE_STORE_PASSWORD")
 def relKeyPassword = System.getenv("RELEASE_KEY_PASSWORD")
@@ -17,6 +18,12 @@ android {
         versionName "2.1"
         testInstrumentationRunner 'com.appttude.h_mal.farmr.application.TestRunner'
         vectorDrawables.useSupportLibrary = true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
     }
     signingConfigs {
         release {
@@ -32,6 +39,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    sourceSets {
+        androidTest.assets.srcDirs +=
+                files("$projectDir/schemas".toString())
     }
     useLibrary 'android.test.mock'
 }
@@ -77,6 +88,8 @@ dependencies {
     / * Room database * /
     runtimeOnly "androidx.room:room-runtime:$ROOM_VERSION"
     implementation "androidx.room:room-ktx:$ROOM_VERSION"
+    kapt "androidx.room:room-compiler:$ROOM_VERSION"
+    androidTestImplementation "android.arch.persistence.room:testing:1.1.1"
     / *Kodein Dependency Injection * /
     implementation "org.kodein.di:kodein-di-generic-jvm:$KODEIN_VERSION"
     implementation "org.kodein.di:kodein-di-framework-android-x:$KODEIN_VERSION"

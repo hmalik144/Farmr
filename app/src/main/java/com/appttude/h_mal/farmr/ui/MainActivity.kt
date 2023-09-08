@@ -1,12 +1,7 @@
 package com.appttude.h_mal.farmr.ui
 
-import android.Manifest
-import android.app.Activity
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.Menu
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BackPressedListener
 import com.appttude.h_mal.farmr.base.BaseActivity
@@ -23,12 +18,6 @@ class MainActivity : BaseActivity() {
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.container, FragmentMain()).addToBackStack("main").commit()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
     }
 
     override fun onBackPressed() {

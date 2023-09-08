@@ -1,6 +1,5 @@
 package com.appttude.h_mal.farmr.ui.robots
 
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.scrollTo
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.model.ShiftType

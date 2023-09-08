@@ -24,8 +24,11 @@
         app:backgroundTint="@color/colorPrimary" />
 
     <include
-        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:visibility="visible"
         layout="@layout/empty_list_view"
-        android:id="@+id/empty_view"/>
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

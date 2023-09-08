@@ -2,6 +2,7 @@ package com.appttude.h_mal.farmr.ui
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -12,7 +13,7 @@ import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BackPressedListener
-import com.appttude.h_mal.farmr.base.BaseFragment
+import com.appttude.h_mal.farmr.base.FormFragment
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.ID
@@ -28,7 +29,7 @@ import com.appttude.h_mal.farmr.utils.show
 import com.appttude.h_mal.farmr.utils.validateField
 import com.appttude.h_mal.farmr.viewmodel.SubmissionViewModel
 
-class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_item),
+class FragmentAddItem : FormFragment<SubmissionViewModel>(R.layout.fragment_add_item),
     RadioGroup.OnCheckedChangeListener, BackPressedListener {
 
     private lateinit var mHourlyRadioButton: RadioButton
@@ -117,61 +118,69 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
         setupViewAfterViewCreated()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val title = when (arguments?.containsKey(ID)) {
+            true -> getString(R.string.edit_item_title)
+            else -> getString(R.string.add_item_title)
+        }
+        setTitle(title)
+    }
+
     private fun setupViewAfterViewCreated() {
         id = arguments?.getLong(ID)
         wholeView.hide()
 
-        val title = when (arguments?.containsKey(ID)) {
-            true -> {
-                // Since we are editing a shift lets load the shift data into the views
-                viewModel.getCurrentShift(arguments!!.getLong(ID))?.run {
-                    mLocationEditText.setText(description)
-                    mDateEditText.setText(date)
+        if (arguments?.containsKey(ID) == true) {
+            // Since we are editing a shift lets load the shift data into the views
+            viewModel.getCurrentShift(arguments!!.getLong(ID))?.run {
+                mLocationEditText.setText(description)
+                mDateEditText.setText(date)
 
-                    // Set types
-                    mType = ShiftType.getEnumByType(type)
-                    mDescription = description
-                    mDate = date
-                    mPayRate = rateOfPay
+                // Set types
+                mType = ShiftType.getEnumByType(type)
+                mDescription = description
+                mDate = date
+                mPayRate = rateOfPay
 
-                    when (ShiftType.getEnumByType(type)) {
-                        ShiftType.HOURLY -> {
-                            mHourlyRadioButton.isChecked = true
-                            mPieceRadioButton.isChecked = false
-                            mTimeInEditText.setText(timeIn)
-                            mTimeOutEditText.setText(timeOut)
-                            mBreakEditText.setText(breakMins.toString())
-                            val durationText = "${duration.formatToTwoDpString()} Hours"
-                            mDurationTextView.text = durationText
+                when (ShiftType.getEnumByType(type)) {
+                    ShiftType.HOURLY -> {
+                        mHourlyRadioButton.isChecked = true
+                        mPieceRadioButton.isChecked = false
+                        mTimeInEditText.setText(timeIn)
+                        mTimeOutEditText.setText(timeOut)
+                        mBreakEditText.setText(breakMins.toString())
+                        val durationText = "${duration.formatToTwoDpString()} Hours"
+                        mDurationTextView.text = durationText
 
-                            // Set fields
-                            mTimeIn = timeIn
-                            mTimeOut = timeOut
-                            mBreaks = breakMins
-                        }
-
-                        ShiftType.PIECE -> {
-                            mHourlyRadioButton.isChecked = false
-                            mPieceRadioButton.isChecked = true
-                            mUnitEditText.setText(units.formatToTwoDpString())
-
-                            // Set piece rate units
-                            mUnits = units
-                        }
+                        // Set fields
+                        mTimeIn = timeIn
+                        mTimeOut = timeOut
+                        mBreaks = breakMins
                     }
-                    mPayRateEditText.setText(rateOfPay.formatAsCurrencyString())
-                    mTotalPayTextView.text = totalPay.formatAsCurrencyString()
 
-                    calculateTotalPay()
+                    ShiftType.PIECE -> {
+                        mHourlyRadioButton.isChecked = false
+                        mPieceRadioButton.isChecked = true
+                        mUnitEditText.setText(units.formatToTwoDpString())
+
+                        // Set piece rate units
+                        mUnits = units
+                    }
                 }
+                mPayRateEditText.setText(rateOfPay.formatAsCurrencyString())
+                mTotalPayTextView.text = totalPay.formatAsCurrencyString()
 
-                // Return title
-                getString(R.string.edit_item_title)
+                calculateTotalPay()
             }
-
-            else -> getString(R.string.add_item_title)
         }
-        setTitle(title)
+
+        applyFormListener(view = view as ViewGroup)
     }
 
     override fun onCheckedChanged(radioGroup: RadioGroup, id: Int) {
@@ -264,6 +273,7 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
                         StringBuilder().append(mDuration).append(" hours").toString()
                     mDuration!! * mPayRate
                 }
+
                 ShiftType.PIECE -> {
                     (mUnits ?: 0f) * mPayRate
                 }
@@ -273,9 +283,7 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
     }
 
     override fun onBackPressed(): Boolean {
-        if (mRadioGroup.checkedRadioButtonId == -1) {
-            mActivity?.popBackStack()
-        } else {
+        if (didFormChange()) {
             requireContext().createDialog(
                 title = "Discard Changes?",
                 message = "Are you sure you want to discard changes?",
@@ -284,6 +292,8 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
                     mActivity?.popBackStack()
                 }
             )
+        } else {
+            mActivity?.popBackStack()
         }
         return true
     }

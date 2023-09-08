@@ -35,7 +35,6 @@ class FurtherInfoFragment : BaseFragment<InfoViewModel>(R.layout.fragment_futher
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setTitle(getString(R.string.further_info_title))
 
         progressBarFI = view.findViewById(R.id.progressBar_info)
         wholeView = view.findViewById(R.id.further_info_view)
@@ -57,6 +56,16 @@ class FurtherInfoFragment : BaseFragment<InfoViewModel>(R.layout.fragment_futher
         }
 
         viewModel.retrieveData(arguments)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setTitle(getString(R.string.further_info_title))
     }
 
     override fun onSuccess(data: Any?) {

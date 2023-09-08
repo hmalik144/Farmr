@@ -33,7 +33,6 @@ class FilterDataFragment : BaseFragment<FilterViewModel>(R.layout.fragment_filte
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setTitle(getString(R.string.title_activity_filter_data))
 
         LocationET = view.findViewById(R.id.filterLocationEditText)
         dateFromET = view.findViewById(R.id.fromdateInEditText)
@@ -73,6 +72,16 @@ class FilterDataFragment : BaseFragment<FilterViewModel>(R.layout.fragment_filte
         typeSpinner.onItemSelectedListener = this
 
         submit.setOnClickListener(this)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setTitle(getString(R.string.title_activity_filter_data))
     }
 
     override fun onItemSelected(

@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'androidx.navigation.safeargs'
 
 def relStorePassword = System.getenv("RELEASE_STORE_PASSWORD")
 def relKeyPassword = System.getenv("RELEASE_KEY_PASSWORD")
@@ -13,8 +14,8 @@ android {
         applicationId "com.appttude.h_mal.farmr"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 5
-        versionName "2.3"
+        versionCode 6
+        versionName "2.4"
         testInstrumentationRunner 'com.appttude.h_mal.farmr.application.TestRunner'
         vectorDrawables.useSupportLibrary = true
     }
@@ -49,6 +50,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-core:$LIFECYCLE_VERSION"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$LIFECYCLE_VERSION"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    / * Fragment Navigation * /
+    implementation "androidx.navigation:navigation-fragment-ktx:$NAVIGATION_VERSION"
+    implementation "androidx.navigation:navigation-ui-ktx:$NAVIGATION_VERSION"
     / * Unit testing * /
     testImplementation "junit:junit:$JUNIT_VERSION"
     androidTestRuntimeOnly "org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION"

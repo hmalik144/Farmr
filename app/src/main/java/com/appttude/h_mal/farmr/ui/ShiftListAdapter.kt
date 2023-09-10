@@ -14,6 +14,9 @@ import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.utils.ID
 import com.appttude.h_mal.farmr.utils.formatToTwoDpString
+import com.appttude.h_mal.farmr.utils.formatToTwoDp
+import com.appttude.h_mal.farmr.utils.generateView
+import com.appttude.h_mal.farmr.utils.navigateTo
 import com.appttude.h_mal.farmr.utils.navigateToFragment
 
 class ShiftListAdapter(
@@ -64,23 +67,16 @@ class ShiftListAdapter(
             }
         }
 
-        val b: Bundle = Bundle()
-        b.putLong(ID, data.id)
+
         view.setOnClickListener {
             // Navigate to further info
-            fragment.navigateToFragment(
-                FurtherInfoFragment(),
-                bundle = b,
-                name = "furtherinfo"
-            )
+            val nav = FragmentMainDirections.mainToFurtherInfo(data.id)
+            fragment.navigateTo(nav)
         }
         editView.setOnClickListener {
             // Navigate to edit
-            fragment.navigateToFragment(
-                FragmentAddItem(),
-                bundle = b,
-                name = "additem"
-            )
+            val nav = FragmentMainDirections.mainToAddItem(data.id)
+            fragment.navigateTo(nav)
         }
         view.setOnLongClickListener {
             AlertDialog.Builder(it.context)

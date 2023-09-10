@@ -17,12 +17,10 @@ class InfoViewModelTest : ShiftViewModelTest<InfoViewModel>() {
         // Arrange
         val id = anyLong()
         val shift = mockk<ShiftObject>()
-        val bundle = mockk<Bundle>()
 
         // Act
         every { repository.readSingleShiftFromDatabase(id) }.returns(shift)
-        every { bundle.getLong(ID) }.returns(id)
-        viewModel.retrieveData(bundle)
+        viewModel.retrieveData(id)
 
         // Assert
         assertIs<ShiftObject>(retrieveCurrentData())
@@ -33,34 +31,13 @@ class InfoViewModelTest : ShiftViewModelTest<InfoViewModel>() {
     }
 
     @Test
-    fun retrieveData_noValidBundleAndId_unsuccessfulRetrieval() {
-        // Arrange
-        val id = anyLong()
-        val shift = mockk<ShiftObject>()
-        val bundle = mockk<Bundle>()
-
-        // Act
-        every { repository.readSingleShiftFromDatabase(id) }.returns(shift)
-        every { bundle.getLong(ID) }.returns(id)
-        viewModel.retrieveData(null)
-
-        // Assert
-        assertEquals(
-            retrieveCurrentError(),
-            "Failed to retrieve shift"
-        )
-    }
-
-    @Test
     fun retrieveData_validBundleNoShift_successfulRetrieval() {
         // Arrange
         val id = anyLong()
-        val bundle = mockk<Bundle>()
 
         // Act
         every { repository.readSingleShiftFromDatabase(id) }.returns(null)
-        every { bundle.getLong(ID) }.returns(id)
-        viewModel.retrieveData(bundle)
+        viewModel.retrieveData(id)
 
         // Assert
         assertEquals(

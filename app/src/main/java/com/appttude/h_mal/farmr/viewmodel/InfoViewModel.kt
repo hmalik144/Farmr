@@ -10,13 +10,7 @@ class InfoViewModel(
     repository: Repository
 ) : ShiftViewModel(repository) {
 
-    fun retrieveData(bundle: Bundle?) {
-        val id = bundle?.getLong(ID)
-        if (id == null) {
-            onError("Failed to retrieve shift")
-            return
-        }
-
+    fun retrieveData(id: Long) {
         val shift = getCurrentShift(id)
         if (shift == null) {
             onError("Failed to retrieve shift")

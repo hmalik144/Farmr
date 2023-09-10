@@ -1,7 +1,9 @@
 package com.appttude.h_mal.farmr.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -9,10 +11,10 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doAfterTextChanged
 import com.appttude.h_mal.farmr.R
-import com.appttude.h_mal.farmr.base.BackPressedListener
-import com.appttude.h_mal.farmr.base.BaseFragment
+import com.appttude.h_mal.farmr.base.FormFragment
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.ID
@@ -20,16 +22,18 @@ import com.appttude.h_mal.farmr.utils.createDialog
 import com.appttude.h_mal.farmr.utils.displayToast
 import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
 import com.appttude.h_mal.farmr.utils.formatToTwoDpString
+import com.appttude.h_mal.farmr.utils.goBack
 import com.appttude.h_mal.farmr.utils.hide
-import com.appttude.h_mal.farmr.utils.popBackStack
 import com.appttude.h_mal.farmr.utils.setDatePicker
 import com.appttude.h_mal.farmr.utils.setTimePicker
 import com.appttude.h_mal.farmr.utils.show
 import com.appttude.h_mal.farmr.utils.validateField
 import com.appttude.h_mal.farmr.viewmodel.SubmissionViewModel
 
-class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_item),
-    RadioGroup.OnCheckedChangeListener, BackPressedListener {
+class FragmentAddItem : FormFragment<SubmissionViewModel>(R.layout.fragment_add_item),
+    RadioGroup.OnCheckedChangeListener {
+
+    private lateinit var onBackPressed: OnBackPressedCallback
 
     private lateinit var mHourlyRadioButton: RadioButton
     private lateinit var mPieceRadioButton: RadioButton
@@ -117,61 +121,87 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
         setupViewAfterViewCreated()
     }
 
-    private fun setupViewAfterViewCreated() {
-        id = arguments?.getLong(ID)
-        wholeView.hide()
-
-        val title = when (arguments?.containsKey(ID)) {
-            true -> {
-                // Since we are editing a shift lets load the shift data into the views
-                viewModel.getCurrentShift(arguments!!.getLong(ID))?.run {
-                    mLocationEditText.setText(description)
-                    mDateEditText.setText(date)
-
-                    // Set types
-                    mType = ShiftType.getEnumByType(type)
-                    mDescription = description
-                    mDate = date
-                    mPayRate = rateOfPay
-
-                    when (ShiftType.getEnumByType(type)) {
-                        ShiftType.HOURLY -> {
-                            mHourlyRadioButton.isChecked = true
-                            mPieceRadioButton.isChecked = false
-                            mTimeInEditText.setText(timeIn)
-                            mTimeOutEditText.setText(timeOut)
-                            mBreakEditText.setText(breakMins.toString())
-                            val durationText = "${duration.formatToTwoDpString()} Hours"
-                            mDurationTextView.text = durationText
-
-                            // Set fields
-                            mTimeIn = timeIn
-                            mTimeOut = timeOut
-                            mBreaks = breakMins
-                        }
-
-                        ShiftType.PIECE -> {
-                            mHourlyRadioButton.isChecked = false
-                            mPieceRadioButton.isChecked = true
-                            mUnitEditText.setText(units.formatToTwoDpString())
-
-                            // Set piece rate units
-                            mUnits = units
-                        }
-                    }
-                    mPayRateEditText.setText(rateOfPay.formatAsCurrencyString())
-                    mTotalPayTextView.text = totalPay.formatAsCurrencyString()
-
-                    calculateTotalPay()
-                }
-
-                // Return title
-                getString(R.string.edit_item_title)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(false)
+        // This callback is only called when MyFragment is at least started
+        onBackPressed = object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() {
+                onBackPressed()
             }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressed)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        val title = when (arguments?.containsKey(ID)) {
+            true -> getString(R.string.edit_item_title)
             else -> getString(R.string.add_item_title)
         }
         setTitle(title)
+
+        onBackPressed.isEnabled = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        onBackPressed.isEnabled = false
+    }
+
+    private fun setupViewAfterViewCreated() {
+        val id = try {
+            FragmentAddItemArgs.fromBundle(requireArguments()).shiftId
+        } catch (e: Exception) {
+            Log.i("Nav Args", "Failed to retrieve args from navigation")
+            null
+        }
+
+        wholeView.hide()
+
+        // Since we are editing a shift lets load the shift data into the views
+        id?.let { viewModel.getCurrentShift(id) }?.run {
+            mLocationEditText.setText(description)
+            mDateEditText.setText(date)
+
+            // Set types
+            mType = ShiftType.getEnumByType(type)
+            mDescription = description
+            mDate = date
+            mPayRate = rateOfPay
+
+            when (ShiftType.getEnumByType(type)) {
+                ShiftType.HOURLY -> {
+                    mHourlyRadioButton.isChecked = true
+                    mPieceRadioButton.isChecked = false
+                    mTimeInEditText.setText(timeIn)
+                    mTimeOutEditText.setText(timeOut)
+                    mBreakEditText.setText(breakMins.toString())
+                    val durationText = "${duration.formatToTwoDpString()} Hours"
+                    mDurationTextView.text = durationText
+
+                    // Set fields
+                    mTimeIn = timeIn
+                    mTimeOut = timeOut
+                    mBreaks = breakMins
+                }
+
+                ShiftType.PIECE -> {
+                    mHourlyRadioButton.isChecked = false
+                    mPieceRadioButton.isChecked = true
+                    mUnitEditText.setText(units.formatToTwoDpString())
+
+                    // Set piece rate units
+                    mUnits = units
+                }
+            }
+            mPayRateEditText.setText(rateOfPay.formatAsCurrencyString())
+            mTotalPayTextView.text = totalPay.formatAsCurrencyString()
+
+            calculateTotalPay()
+        }
+
+        applyFormListener(view = view as ViewGroup)
     }
 
     override fun onCheckedChanged(radioGroup: RadioGroup, id: Int) {
@@ -264,6 +294,7 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
                         StringBuilder().append(mDuration).append(" hours").toString()
                     mDuration!! * mPayRate
                 }
+
                 ShiftType.PIECE -> {
                     (mUnits ?: 0f) * mPayRate
                 }
@@ -272,27 +303,26 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
         }
     }
 
-    override fun onBackPressed(): Boolean {
-        if (mRadioGroup.checkedRadioButtonId == -1) {
-            mActivity?.popBackStack()
-        } else {
+    fun onBackPressed() {
+        if (didFormChange()) {
             requireContext().createDialog(
                 title = "Discard Changes?",
                 message = "Are you sure you want to discard changes?",
                 displayCancel = true,
                 okCallback = { _, _ ->
-                    mActivity?.popBackStack()
+                    goBack()
                 }
             )
+        } else {
+            goBack()
         }
-        return true
     }
 
     override fun onSuccess(data: Any?) {
         super.onSuccess(data)
         if (data is Success) {
             displayToast(data.successMessage)
-            popBackStack()
+            goBack()
         }
     }
 }

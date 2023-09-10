@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'androidx.navigation.safeargs'
 
 def relStorePassword = System.getenv("RELEASE_STORE_PASSWORD")
 def relKeyPassword = System.getenv("RELEASE_KEY_PASSWORD")
@@ -49,6 +50,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-core:$LIFECYCLE_VERSION"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$LIFECYCLE_VERSION"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    / * Fragment Navigation * /
+    implementation "androidx.navigation:navigation-fragment-ktx:$NAVIGATION_VERSION"
+    implementation "androidx.navigation:navigation-ui-ktx:$NAVIGATION_VERSION"
     / * Unit testing * /
     testImplementation "junit:junit:$JUNIT_VERSION"
     androidTestRuntimeOnly "org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION"

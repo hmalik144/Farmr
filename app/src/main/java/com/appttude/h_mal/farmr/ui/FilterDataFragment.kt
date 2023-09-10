@@ -13,6 +13,7 @@ import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BaseFragment
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Success
+import com.appttude.h_mal.farmr.utils.goBack
 import com.appttude.h_mal.farmr.utils.setDatePicker
 import com.appttude.h_mal.farmr.viewmodel.FilterViewModel
 
@@ -109,6 +110,6 @@ class FilterDataFragment : BaseFragment<FilterViewModel>(R.layout.fragment_filte
 
     override fun onSuccess(data: Any?) {
         super.onSuccess(data)
-        if (data is Success) popBackStack()
+        if (data is Success) goBack()
     }
 }

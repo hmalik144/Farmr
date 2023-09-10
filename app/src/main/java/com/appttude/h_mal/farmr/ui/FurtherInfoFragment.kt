@@ -13,6 +13,7 @@ import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.utils.CURRENCY
 import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
 import com.appttude.h_mal.farmr.utils.hide
+import com.appttude.h_mal.farmr.utils.navigateTo
 import com.appttude.h_mal.farmr.utils.navigateToFragment
 import com.appttude.h_mal.farmr.utils.show
 import com.appttude.h_mal.farmr.viewmodel.InfoViewModel
@@ -51,11 +52,14 @@ class FurtherInfoFragment : BaseFragment<InfoViewModel>(R.layout.fragment_futher
         hourlyDetailHolder = view.findViewById(R.id.details_hourly_details)
         unitsHolder = view.findViewById(R.id.details_units_holder)
 
+        val id = FurtherInfoFragmentArgs.fromBundle(requireArguments()).shiftId
+
         editButton.setOnClickListener {
-            navigateToFragment(FragmentAddItem(), name = "additem", bundle = arguments!!)
+            val nav = FurtherInfoFragmentDirections.furtherInfoToAddItem(id)
+            navigateTo(nav)
         }
 
-        viewModel.retrieveData(arguments)
+        viewModel.retrieveData(id)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

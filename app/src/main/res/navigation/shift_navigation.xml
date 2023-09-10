@@ -24,7 +24,7 @@
         android:id="@+id/fragmentAddItem"
         android:name="com.appttude.h_mal.farmr.ui.FragmentAddItem"
         android:label="fragment_add_item"
-        tools:layout="@layout/fragment_add_item" >
+        tools:layout="@layout/fragment_add_item">
         <argument
             android:name="shiftId"
             app:argType="long" />

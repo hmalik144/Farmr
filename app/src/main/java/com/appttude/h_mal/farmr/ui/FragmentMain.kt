@@ -3,6 +3,8 @@ package com.appttude.h_mal.farmr.ui
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.core.content.FileProvider
@@ -34,28 +36,25 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTitle("Shift List")
         // Inflate the layout for this fragment
         setHasOptionsMenu(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setTitle("Shift List")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mAdapter = ShiftListAdapter(this) {
+        emptyView = view.findViewById(R.id.empty_view)
+        productListView = view.findViewById(R.id.list_item_view)
+
+        mAdapter = ShiftListAdapter(this, emptyView) {
             viewModel.deleteShift(it)
         }
-        productListView = view.findViewById(R.id.list_item_view)
         productListView.adapter = mAdapter
-        emptyView = view.findViewById(R.id.empty_view)
-
-        mAdapter.registerAdapterDataObserver(object : AdapterDataObserver() {
-            override fun onChanged() {
-                super.onChanged()
-                if (mAdapter.itemCount == 0) emptyView.show()
-                else emptyView.hide()
-            }
-        })
 
         view.findViewById<FloatingActionButton>(R.id.fab1).setOnClickListener {
             navigateTo(R.id.main_to_addItem)
@@ -65,6 +64,11 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
     override fun onStart() {
         super.onStart()
         viewModel.refreshLiveData()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_main, menu)
     }
 
     override fun onSuccess(data: Any?) {

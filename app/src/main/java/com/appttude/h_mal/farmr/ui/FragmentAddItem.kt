@@ -2,6 +2,7 @@ package com.appttude.h_mal.farmr.ui
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -12,7 +13,7 @@ import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BackPressedListener
-import com.appttude.h_mal.farmr.base.BaseFragment
+import com.appttude.h_mal.farmr.base.FormFragment
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.ID
@@ -30,7 +31,7 @@ import com.appttude.h_mal.farmr.utils.show
 import com.appttude.h_mal.farmr.utils.validateField
 import com.appttude.h_mal.farmr.viewmodel.SubmissionViewModel
 
-class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_item),
+class FragmentAddItem : FormFragment<SubmissionViewModel>(R.layout.fragment_add_item),
     RadioGroup.OnCheckedChangeListener, BackPressedListener {
 
     private lateinit var mHourlyRadioButton: RadioButton
@@ -119,15 +120,29 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
         setupViewAfterViewCreated()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val title = when (arguments?.containsKey(ID)) {
+            true -> getString(R.string.edit_item_title)
+            else -> getString(R.string.add_item_title)
+        }
+        setTitle(title)
+    }
+
     private fun setupViewAfterViewCreated() {
         val id = arguments?.takeIf { it.containsKey(SHIFT_ID) }
             ?.let { FragmentAddItemArgs.fromBundle(it).shiftId }
 
         wholeView.hide()
 
-        val title = id?.let {
+        if (id != null) {
             // Since we are editing a shift lets load the shift data into the views
-            viewModel.getCurrentShift(id)?.run {
+            viewModel.getCurrentShift(arguments!!.getLong(ID))?.run {
                 mLocationEditText.setText(description)
                 mDateEditText.setText(date)
 
@@ -167,9 +182,9 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
 
                 calculateTotalPay()
             }
-            getString(R.string.edit_item_title)
-        } ?: getString(R.string.add_item_title)
-        setTitle(title)
+        }
+
+        applyFormListener(view = view as ViewGroup)
     }
 
     override fun onCheckedChanged(radioGroup: RadioGroup, id: Int) {
@@ -272,17 +287,17 @@ class FragmentAddItem : BaseFragment<SubmissionViewModel>(R.layout.fragment_add_
     }
 
     override fun onBackPressed(): Boolean {
-        if (mRadioGroup.checkedRadioButtonId == -1) {
-            goBack()
-        } else {
+        if (didFormChange()) {
             requireContext().createDialog(
                 title = "Discard Changes?",
                 message = "Are you sure you want to discard changes?",
                 displayCancel = true,
                 okCallback = { _, _ ->
-                    mActivity?.popBackStack()
+                    goBack()
                 }
             )
+        } else {
+            goBack()
         }
         return true
     }

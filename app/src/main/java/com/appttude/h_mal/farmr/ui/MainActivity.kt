@@ -1,8 +1,5 @@
 package com.appttude.h_mal.farmr.ui
 
-import android.Manifest
-import android.app.Activity
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -31,12 +28,6 @@ class MainActivity : BaseActivity() {
         navController.setGraph(R.navigation.shift_navigation)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         val currentFragment = navHost.parentFragment
         return if (currentFragment is BackPressedListener) {
@@ -49,6 +40,7 @@ class MainActivity : BaseActivity() {
             }
         }
     }
+
 
     override fun onBackPressed() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.container)

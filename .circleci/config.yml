@@ -127,4 +127,4 @@ workflows:
               only:
                 - release
           requires:
-            - build-and-test
+            - run_instrumentation_test

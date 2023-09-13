@@ -63,9 +63,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main) {
         emptyView = view.findViewById(R.id.empty_view)
         productListView = view.findViewById(R.id.list_item_view)
 
-        mAdapter = ShiftListAdapter(this, emptyView) {
-            viewModel.deleteShift(it)
-        }
+        mAdapter = ShiftListAdapter(this, emptyView, viewModel)
         productListView.adapter = mAdapter
 
         view.findViewById<FloatingActionButton>(R.id.fab1).setOnClickListener {

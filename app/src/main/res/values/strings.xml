@@ -97,4 +97,10 @@
     <string name="further_info_title">Shift Details</string>
     <string name="insert_break_in_minutes">insert break in minutes</string>
     <string name="break_res">Break</string>
+    <string name="hours_symbol">h</string>
+    <string name="minutes_symbol">m</string>
+    <string name="piece_symbol">pcs</string>
+    <string name="pound_sign">£</string>
+    <string name="delete_shift">Delete shift</string>
+    <string name="update_shift">Update Shift</string>
 </resources>

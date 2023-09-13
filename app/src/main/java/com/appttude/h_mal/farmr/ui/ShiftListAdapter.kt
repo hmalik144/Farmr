@@ -2,27 +2,30 @@ package com.appttude.h_mal.farmr.ui
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BaseListAdapter
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.ShiftType
-import com.appttude.h_mal.farmr.utils.ID
 import com.appttude.h_mal.farmr.utils.formatToTwoDpString
-import com.appttude.h_mal.farmr.utils.formatToTwoDp
-import com.appttude.h_mal.farmr.utils.generateView
 import com.appttude.h_mal.farmr.utils.navigateTo
-import com.appttude.h_mal.farmr.utils.navigateToFragment
+import com.appttude.h_mal.farmr.viewmodel.MainViewModel
+
+
+const val PIECE_ITEM = 500
+const val HOURLY_ITEM = 501
 
 class ShiftListAdapter(
     private val fragment: Fragment,
     emptyView: View,
-    private val longPressCallback: (Long) -> Unit
+    private val viewModel: MainViewModel
 ) : BaseListAdapter<ShiftObject>(diffCallBack, R.layout.list_item_1, emptyView) {
 
     @SuppressLint("SetTextI18n")
@@ -33,40 +36,28 @@ class ShiftListAdapter(
         val descriptionTextView: TextView = view.findViewById(R.id.location)
         val dateTextView: TextView = view.findViewById(R.id.date)
         val totalPay: TextView = view.findViewById(R.id.total_pay)
-        val hoursView: TextView = view.findViewById(R.id.hours)
-        val h: TextView = view.findViewById(R.id.h)
-        val minutesView: TextView = view.findViewById(R.id.minutes)
-        val m: TextView = view.findViewById(R.id.m)
         val editView: ImageView = view.findViewById(R.id.imageView)
-        h.text = "h"
-        m.text = "m"
-        val typeText: String = data.type
-        val descriptionText: String = data.description
-        val dateText: String = data.date
-        val totalPayText: String = data.totalPay.formatToTwoDpString()
 
-        descriptionTextView.text = descriptionText
-        dateTextView.text = dateText
-        totalPay.text = totalPayText
+        when (getItemViewType(position)) {
+            HOURLY_ITEM -> {
+                val hoursView: TextView = view.findViewById(R.id.hours)
+                val minutesView: TextView = view.findViewById(R.id.minutes)
 
-        when (ShiftType.getEnumByType(typeText)) {
-            ShiftType.HOURLY -> {
                 val time = data.getHoursMinutesPairFromDuration()
-
                 hoursView.text = time.first
-                minutesView.text = time.second
+                minutesView.text = if (time.second.length == 1) "0${time.second}" else time.second
             }
 
-            ShiftType.PIECE -> {
+            PIECE_ITEM -> {
+                val unitsView: TextView = view.findViewById(R.id.pieces)
                 val unitsText: String = data.units.toString()
 
-                hoursView.text = unitsText
-                h.text = ""
-                minutesView.text = ""
-                m.text = "pcs"
+                unitsView.text = unitsText
             }
         }
-
+        descriptionTextView.text = data.description
+        dateTextView.text = data.date
+        totalPay.text = data.totalPay.formatToTwoDpString()
 
         view.setOnClickListener {
             // Navigate to further info
@@ -74,20 +65,60 @@ class ShiftListAdapter(
             fragment.navigateTo(nav)
         }
         editView.setOnClickListener {
-            // Navigate to edit
-            val nav = FragmentMainDirections.mainToAddItem(data.id)
-            fragment.navigateTo(nav)
-        }
-        view.setOnLongClickListener {
-            AlertDialog.Builder(it.context)
-                .setMessage("Are you sure you want to delete")
-                .setPositiveButton("delete") { _, _ -> longPressCallback.invoke(data.id) }
-                .setNegativeButton("cancel") { dialog, _ ->
-                    dialog?.dismiss()
+            //creating a popup menu
+            val popup = PopupMenu(it.context, it)
+            //inflating menu from xml resource
+            popup.inflate(R.menu.options_menu)
+
+            //adding click listener
+            popup.setOnMenuItemClickListener { menu ->
+                when (menu.itemId) {
+                    R.id.update -> {
+                        // Navigate to edit
+                        val nav = FragmentMainDirections.mainToAddItem(data.id)
+                        fragment.navigateTo(nav)
+                        return@setOnMenuItemClickListener true
+                    }
+
+                    R.id.delete -> {
+                        AlertDialog.Builder(it.context)
+                            .setMessage("Are you sure you want to delete")
+                            .setPositiveButton("delete") { _, _ -> viewModel.deleteShift(data.id) }
+                            .setNegativeButton("cancel") { dialog, _ ->
+                                dialog?.dismiss()
+                            }
+                            .create().show()
+                        return@setOnMenuItemClickListener true
+                    }
+
+                    else -> return@setOnMenuItemClickListener false
                 }
-                .create().show()
-            true
+            }
+            //displaying the popup
+            popup.show()
         }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        val typeString = getItem(position).type
+        return when (ShiftType.getEnumByType(typeString)) {
+            ShiftType.HOURLY -> HOURLY_ITEM
+            ShiftType.PIECE -> PIECE_ITEM
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrentViewHolder {
+        val layoutId = when (viewType) {
+            HOURLY_ITEM -> R.layout.list_cell_hourly
+            PIECE_ITEM -> R.layout.list_cell_piece
+            else -> {
+                return super.onCreateViewHolder(parent, viewType)
+            }
+        }
+        val currentView = LayoutInflater
+            .from(parent.context)
+            .inflate(layoutId, parent, false)
+        return CurrentViewHolder(currentView)
     }
 
     companion object {

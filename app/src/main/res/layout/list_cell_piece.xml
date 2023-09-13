@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="#656565"
+    android:orientation="horizontal"
+    android:paddingTop="24dp"
+    android:paddingBottom="24dp"
+    android:showDividers="end">
+
+    <LinearLayout
+        android:id="@+id/time_holder"
+        android:layout_width="@dimen/unit_holder_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginStart="12dp"
+        android:gravity="end"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/pieces"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="10.0"
+            android:textColor="#143d66"
+            android:textSize="@dimen/unit_text_size" />
+
+        <TextView
+            android:id="@+id/h"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/piece_symbol"
+            android:textColor="#143d66"
+            android:textSize="@dimen/units_symbol_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/totalpay_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:orientation="horizontal"
+        app:layout_constraintRight_toRightOf="@id/time_holder"
+        app:layout_constraintTop_toBottomOf="@id/time_holder">
+
+        <TextView
+            android:id="@+id/currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pound_sign"
+            android:textColor="#728fcc"
+            android:textSize="@dimen/units_symbol_size" />
+
+        <TextView
+            android:id="@+id/total_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="000.00"
+            android:textColor="#728fcc"
+            android:textSize="@dimen/total_pay_size" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="@id/totalpay_holder"
+        app:layout_constraintLeft_toRightOf="@id/time_holder"
+        app:layout_constraintTop_toTopOf="@id/time_holder" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:gravity="bottom|start"
+        android:textColor="#000000"
+        android:textSize="@dimen/location_size"
+        app:layout_constraintBottom_toBottomOf="@id/time_holder"
+        app:layout_constraintLeft_toRightOf="@id/line"
+        app:layout_constraintRight_toLeftOf="@id/imageView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        android:maxLines="1"
+        tools:text="Location Name" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:maxLines="3"
+        tools:text="01-05-2010"
+        android:textSize="@dimen/date_size"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/location"
+        app:layout_constraintLeft_toLeftOf="@id/location"
+        app:layout_constraintBottom_toBottomOf="@id/totalpay_holder"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_more_vert_24"
+        android:layout_marginEnd="12dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

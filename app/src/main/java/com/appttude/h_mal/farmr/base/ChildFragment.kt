@@ -15,7 +15,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.io.IOException
 
-@Suppress("EmptyMethod", "EmptyMethod")
+@Suppress("EmptyMethod")
 abstract class ChildFragment<V : BaseViewModel>(@LayoutRes contentLayoutId: Int) :
     Fragment(contentLayoutId), KodeinAware {
 
@@ -24,10 +24,12 @@ abstract class ChildFragment<V : BaseViewModel>(@LayoutRes contentLayoutId: Int)
 
     lateinit var viewModel: V
 
+    private val parent by lazy { requireParentFragment().requireParentFragment() }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel =
-            ViewModelProvider(requireParentFragment().requireParentFragment(), factory)[getGenericClassAt<V>(0).java]
+            ViewModelProvider(parent, factory)[getGenericClassAt<V>(0).java]
         configureObserver()
     }
 
@@ -58,11 +60,14 @@ abstract class ChildFragment<V : BaseViewModel>(@LayoutRes contentLayoutId: Int)
 
 
     fun navigateParent(navArg: Any) {
-        val fragment = requireParentFragment().requireParentFragment()
         when(navArg) {
-            is Int -> (fragment).navigateTo(navArg)
-            is NavDirections -> (fragment).navigateTo(navArg)
+            is Int -> (parent).navigateTo(navArg)
+            is NavDirections -> (parent).navigateTo(navArg)
             else -> { throw IOException("${navArg::class} is not a valid navigation argment") }
         }
+    }
+
+    fun setTitle(title: String) {
+        (parent as BaseFragment<*>).setTitle(title)
     }
 }

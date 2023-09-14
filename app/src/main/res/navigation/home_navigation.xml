@@ -7,11 +7,11 @@
     <fragment
         android:id="@+id/nav_list"
         android:name="com.appttude.h_mal.farmr.ui.FragmentList"
-        android:label="fragment_list"
+        android:label="@string/text_label_1"
         tools:layout="@layout/fragment_list" />
     <fragment
         android:id="@+id/nav_calendar"
         android:name="com.appttude.h_mal.farmr.ui.CalendarFragment"
-        android:label="fragment_calendar"
+        android:label="@string/text_label_2"
         tools:layout="@layout/fragment_calendar" />
 </navigation>

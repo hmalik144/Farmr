@@ -64,14 +64,14 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main) {
         val navController = navHost.navController
         navController.setGraph(R.navigation.home_navigation)
 
-        navView.setOnNavigationItemSelectedListener {
-            setTitle(it.title.toString())
-            true
-        }
         navView.setupWithNavController(navController)
 
         viewModel.getBottomBarState()?.let {
             navView.selectedItemId = it
+        }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            setTitle(destination.label.toString())
         }
 
         view.findViewById<FloatingActionButton>(R.id.fab1).setOnClickListener {

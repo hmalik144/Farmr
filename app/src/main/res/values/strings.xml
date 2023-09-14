@@ -103,4 +103,7 @@
     <string name="pound_sign">£</string>
     <string name="delete_shift">Delete shift</string>
     <string name="update_shift">Update Shift</string>
+    <string name="fab">Floating action button</string>
+    <string name="text_label_1">Shifts</string>
+    <string name="text_label_2">Calendar</string>
 </resources>

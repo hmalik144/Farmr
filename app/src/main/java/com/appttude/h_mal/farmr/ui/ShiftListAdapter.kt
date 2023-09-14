@@ -8,14 +8,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BaseListAdapter
+import com.appttude.h_mal.farmr.base.ChildFragment
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.utils.formatToTwoDpString
-import com.appttude.h_mal.farmr.utils.navigateTo
 import com.appttude.h_mal.farmr.viewmodel.MainViewModel
 
 
@@ -23,8 +22,8 @@ const val PIECE_ITEM = 500
 const val HOURLY_ITEM = 501
 
 class ShiftListAdapter(
-    private val fragment: Fragment,
-    emptyView: View,
+    private val fragment: ChildFragment<*>,
+    emptyView: View?,
     private val viewModel: MainViewModel
 ) : BaseListAdapter<ShiftObject>(diffCallBack, R.layout.list_item_1, emptyView) {
 
@@ -62,7 +61,7 @@ class ShiftListAdapter(
         view.setOnClickListener {
             // Navigate to further info
             val nav = FragmentMainDirections.mainToFurtherInfo(data.id)
-            fragment.navigateTo(nav)
+            fragment.navigateParent(nav)
         }
         editView.setOnClickListener {
             //creating a popup menu
@@ -76,7 +75,7 @@ class ShiftListAdapter(
                     R.id.update -> {
                         // Navigate to edit
                         val nav = FragmentMainDirections.mainToAddItem(data.id)
-                        fragment.navigateTo(nav)
+                        fragment.navigateParent(nav)
                         return@setOnMenuItemClickListener true
                     }
 

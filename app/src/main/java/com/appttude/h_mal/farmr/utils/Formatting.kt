@@ -1,6 +1,7 @@
 package com.appttude.h_mal.farmr.utils
 
 import java.io.IOException
+import java.math.RoundingMode
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -26,7 +27,7 @@ fun Float.formatAsCurrencyString(): String? {
 }
 
 fun Float.formatToTwoDpString(): String {
-    return toBigDecimal().setScale(2).toString()
+    return toBigDecimal().setScale(2, RoundingMode.HALF_DOWN).toString()
 }
 
 fun String.dateStringIsValid(): Boolean {
@@ -45,6 +46,13 @@ fun Calendar.getTimeString(): String {
 fun String.convertDateString(format: String = DATE_FORMAT): Date? {
     val formatter = SimpleDateFormat(format, Locale.getDefault())
     return formatter.parse(this)
+}
+
+fun String.convertToCalendar(format: String = DATE_FORMAT): Calendar? {
+    val date = convertDateString(format)
+    val calendar = Calendar.getInstance()
+    calendar.time = date ?: return null
+    return calendar
 }
 
 /**

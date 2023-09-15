@@ -112,7 +112,7 @@ class MainViewModelTest {
         val retrievedShifts = retrieveCurrentData()
         val description = viewModel.getInformation()
 
-        every { repository.setFilteringDetailsInPrefs(null, null, null, null) }.returns(Unit)
+        every { repository.setFilteringDetailsInPrefs(null, null, null, null) }.returns(true)
         every { repository.retrieveFilteringDetailsInPrefs() }.returns(getFilter())
         viewModel.clearFilters()
         val descriptionAfterClearedFilter = viewModel.getInformation()

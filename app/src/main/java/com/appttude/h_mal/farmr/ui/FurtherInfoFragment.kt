@@ -12,7 +12,9 @@ import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.utils.CURRENCY
 import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
+import com.appttude.h_mal.farmr.utils.formatToTwoDp
 import com.appttude.h_mal.farmr.utils.hide
+import com.appttude.h_mal.farmr.utils.navigateTo
 import com.appttude.h_mal.farmr.utils.navigateToFragment
 import com.appttude.h_mal.farmr.utils.show
 import com.appttude.h_mal.farmr.viewmodel.InfoViewModel
@@ -35,7 +37,6 @@ class FurtherInfoFragment : BaseFragment<InfoViewModel>(R.layout.fragment_futher
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setTitle(getString(R.string.further_info_title))
 
         progressBarFI = view.findViewById(R.id.progressBar_info)
         wholeView = view.findViewById(R.id.further_info_view)
@@ -52,11 +53,24 @@ class FurtherInfoFragment : BaseFragment<InfoViewModel>(R.layout.fragment_futher
         hourlyDetailHolder = view.findViewById(R.id.details_hourly_details)
         unitsHolder = view.findViewById(R.id.details_units_holder)
 
+        val id = FurtherInfoFragmentArgs.fromBundle(requireArguments()).shiftId
+
         editButton.setOnClickListener {
-            navigateToFragment(FragmentAddItem(), name = "additem", bundle = arguments!!)
+            val nav = FurtherInfoFragmentDirections.furtherInfoToAddItem(id)
+            navigateTo(nav)
         }
 
-        viewModel.retrieveData(arguments)
+        viewModel.retrieveData(id)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setTitle(getString(R.string.further_info_title))
     }
 
     override fun onSuccess(data: Any?) {
@@ -91,7 +105,7 @@ class FurtherInfoFragment : BaseFragment<InfoViewModel>(R.layout.fragment_futher
                 unitsTV.text = units.toString()
 
                 val paymentSummary =
-                    StringBuilder().append(units.formatAsCurrencyString()).append(" Units @ ")
+                    StringBuilder().append(units.formatToTwoDp()).append(" Units @ ")
                         .append(rateOfPay.formatAsCurrencyString()).append(" per Unit").append("\n")
                         .append("Equals: ").append(totalPay.formatAsCurrencyString())
                 totalPayTV.text = paymentSummary

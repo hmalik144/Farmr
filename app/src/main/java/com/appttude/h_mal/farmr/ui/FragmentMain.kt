@@ -3,71 +3,85 @@ package com.appttude.h_mal.farmr.ui
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.FileProvider
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.appttude.h_mal.farmr.R
-import com.appttude.h_mal.farmr.base.BackPressedListener
 import com.appttude.h_mal.farmr.base.BaseFragment
-import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.Sortable
-import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.createDialog
-import com.appttude.h_mal.farmr.utils.displayToast
-import com.appttude.h_mal.farmr.utils.hide
-import com.appttude.h_mal.farmr.utils.navigateToFragment
-import com.appttude.h_mal.farmr.utils.show
+import com.appttude.h_mal.farmr.utils.navigateTo
 import com.appttude.h_mal.farmr.viewmodel.MainViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
 import kotlin.system.exitProcess
 
 
-class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPressedListener {
-    private lateinit var productListView: RecyclerView
-    private lateinit var emptyView: View
-    private lateinit var mAdapter: ShiftListAdapter
+class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main) {
+    private lateinit var onBackPressed: OnBackPressedCallback
+
+    lateinit var navView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTitle("Shift List")
         // Inflate the layout for this fragment
         setHasOptionsMenu(true)
+        // This callback is only called when MyFragment is at least started
+        onBackPressed = object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() {
+                onBackPressed()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressed)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        onBackPressed.isEnabled = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        onBackPressed.isEnabled = false
+
+        viewModel.saveBottomBarState(navView.selectedItemId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        emptyView = view.findViewById(R.id.empty_view)
-        productListView = view.findViewById(R.id.list_item_view)
+        navView = view.findViewById(R.id.bottom_bar)
+        val navHost = childFragmentManager.findFragmentById(R.id.sub_container) as NavHostFragment
 
-        mAdapter = ShiftListAdapter(this, emptyView) {
-            viewModel.deleteShift(it)
+        val navController = navHost.navController
+        navController.setGraph(R.navigation.home_navigation)
+
+        navView.setupWithNavController(navController)
+
+        viewModel.getBottomBarState()?.let {
+            navView.selectedItemId = it
         }
-        productListView.adapter = mAdapter
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            setTitle(destination.label.toString())
+        }
 
         view.findViewById<FloatingActionButton>(R.id.fab1).setOnClickListener {
-            navigateToFragment(FragmentAddItem(), name = "additem")
+            navigateTo(R.id.main_to_addItem)
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.refreshLiveData()
-    }
-
-    override fun onSuccess(data: Any?) {
-        super.onSuccess(data)
-        if (data is List<*>) {
-            @Suppress("UNCHECKED_CAST")
-            mAdapter.submitList(data as List<ShiftObject>)
-        }
-        if (data is Success) {
-            displayToast(data.successMessage)
-        }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_main, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -87,7 +101,7 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
             }
 
             R.id.filter_data -> {
-                navigateToFragment(FilterDataFragment(), name = "filterdata")
+                navigateTo(R.id.main_to_filterData)
                 return true
             }
 
@@ -170,21 +184,13 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
                 file
             )
             intent.setDataAndType(excelUri, "application/vnd.ms-excel")
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivity(intent)
         }
 
     }
 
-    private fun exportDialog() {
-        AlertDialog.Builder(context)
-            .setTitle("Export?")
-            .setMessage("Exporting current filtered data. Continue?")
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(android.R.string.ok) { _, _ -> exportData() }.create().show()
-    }
-
-    override fun onBackPressed(): Boolean {
+    fun onBackPressed() {
         requireContext().createDialog(
             title = "Leave?",
             message = "Are you sure you want to exit Farmr?",
@@ -198,6 +204,5 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main), BackPr
                 exitProcess(0)
             }
         )
-        return true
     }
 }

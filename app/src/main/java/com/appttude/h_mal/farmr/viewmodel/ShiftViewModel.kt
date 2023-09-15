@@ -18,25 +18,13 @@ open class ShiftViewModel(
      */
     fun getCurrentShift(id: Long) = repository.readSingleShiftFromDatabase(id)
 
-    /**
-     * Lambda function that will invoke onError(...) on failure
-     * but update live data when successful
-     */
-    private inline fun doTry(operation: () -> Unit) {
-        try {
-            operation.invoke()
-        } catch (e: Exception) {
-            onError(e)
-        }
-    }
-
     open fun setFiltrationDetails(
         description: String?,
         dateFrom: String?,
         dateTo: String?,
         type: String?
-    ) {
-        repository.setFilteringDetailsInPrefs(description, dateFrom, dateTo, type)
+    ): Boolean {
+        return repository.setFilteringDetailsInPrefs(description, dateFrom, dateTo, type)
     }
 
     open fun getFiltrationDetails(): FilterStore {

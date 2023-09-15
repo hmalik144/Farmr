@@ -91,8 +91,8 @@ class RepositoryImpl(
         timeIn: String?,
         timeOut: String?,
         type: String?
-    ) {
-        preferenceProvider.saveFilteringDetails(description, timeIn, timeOut, type)
+    ): Boolean {
+        return preferenceProvider.saveFilteringDetails(description, timeIn, timeOut, type)
     }
 
 }

@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'androidx.navigation.safeargs'
 apply plugin: 'kotlin-kapt'
 
 def relStorePassword = System.getenv("RELEASE_STORE_PASSWORD")
@@ -14,8 +15,8 @@ android {
         applicationId "com.appttude.h_mal.farmr"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 3
-        versionName "2.1"
+        versionCode 7
+        versionName "3.0"
         testInstrumentationRunner 'com.appttude.h_mal.farmr.application.TestRunner'
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -60,6 +61,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-core:$LIFECYCLE_VERSION"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$LIFECYCLE_VERSION"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    / * Fragment Navigation * /
+    implementation "androidx.navigation:navigation-fragment-ktx:$NAVIGATION_VERSION"
+    implementation "androidx.navigation:navigation-ui-ktx:$NAVIGATION_VERSION"
     / * Unit testing * /
     testImplementation "junit:junit:$JUNIT_VERSION"
     androidTestRuntimeOnly "org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION"
@@ -97,4 +101,6 @@ dependencies {
     implementation "org.kodein.di:kodein-di-framework-android-core:$KODEIN_VERSION"
     / * jxl * /
     implementation "net.sourceforge.jexcelapi:jxl:$JEXCEL_VERSION"
+    / * calendar view * /
+    implementation 'com.applandeo:material-calendar-view:1.7.0'
 }

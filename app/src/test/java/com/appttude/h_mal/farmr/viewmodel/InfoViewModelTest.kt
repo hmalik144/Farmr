@@ -56,12 +56,10 @@ class InfoViewModelTest : ShiftViewModelTest<InfoViewModel>() {
     fun retrieveData_validBundleNoShift_successfulRetrieval() {
         // Arrange
         val id = anyLong()
-        val bundle = mockk<Bundle>()
 
         // Act
         every { repository.readSingleShiftFromDatabase(id) }.returns(null)
-        every { bundle.getLong(ID) }.returns(id)
-        viewModel.retrieveData(bundle)
+        viewModel.retrieveData(id)
 
         // Assert
         assertEquals(

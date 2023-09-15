@@ -289,6 +289,7 @@ class SubmissionViewModel(
                     description = description,
                     date = date,
                     units = units!!,
+
                     rateOfPay = rateOfPay,
                 )
             }

@@ -12,7 +12,7 @@ import com.appttude.h_mal.farmr.utils.show
 abstract class BaseListAdapter<T : Any>(
     diff: DiffUtil.ItemCallback<T>,
     private val layoutId: Int,
-    private val emptyView: View
+    private val emptyView: View?
 ) : ListAdapter<T, BaseListAdapter.CurrentViewHolder>(diff) {
 
     override fun onCreateViewHolder(
@@ -49,8 +49,8 @@ abstract class BaseListAdapter<T : Any>(
             }
 
             fun checkEmpty() {
-                if (itemCount == 0) emptyView.show()
-                else emptyView.hide()
+                if (itemCount == 0) emptyView?.show()
+                else emptyView?.hide()
             }
         })
     }

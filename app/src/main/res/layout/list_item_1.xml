@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,10 +9,11 @@
     android:orientation="horizontal"
     android:paddingBottom="24dp"
     android:paddingTop="24dp"
-    android:showDividers="end">
+    android:showDividers="end"
+    tools:ignore="HardcodedText">
 
     <LinearLayout
-        android:layout_width="87dp"
+        android:layout_width="@dimen/unit_holder_width"
         android:layout_height="wrap_content"
         
         android:layout_marginStart="12dp"
@@ -30,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:text="00"
                 android:textColor="#143d66"
-                android:textSize="30sp" />
+                android:textSize="@dimen/unit_text_size" />
 
             <TextView
                 android:id="@+id/h"
@@ -38,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:text="h"
                 android:textColor="#143d66"
-                android:textSize="12sp" />
+                android:textSize="@dimen/units_symbol_size" />
 
             <TextView
                 android:id="@+id/minutes"
@@ -47,7 +49,7 @@
                 android:layout_weight="1"
                 android:text="00"
                 android:textColor="#143d66"
-                android:textSize="30sp" />
+                android:textSize="@dimen/unit_text_size"/>
 
             <TextView
                 android:id="@+id/m"
@@ -56,7 +58,7 @@
                 android:layout_weight="1"
                 android:text="m"
                 android:textColor="#143d66"
-                android:textSize="12sp" />
+                android:textSize="@dimen/units_symbol_size" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,9 +72,9 @@
                 android:id="@+id/currency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="£"
+                android:text="@string/pound_sign"
                 android:textColor="#728fcc"
-                android:textSize="12sp" />
+                android:textSize="@dimen/units_symbol_size" />
 
             <TextView
                 android:id="@+id/total_pay"
@@ -80,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:text="000.00"
                 android:textColor="#728fcc"
-                android:textSize="20sp" />
+                android:textSize="@dimen/total_pay_size" />
         </LinearLayout>
     </LinearLayout>
 
@@ -106,7 +108,7 @@
             android:layout_below="@+id/date"
             android:maxLines="3"
             android:text="Location Name"
-            android:textSize="20sp" />
+            android:textSize="@dimen/location_size" />
 
         <TextView
             android:id="@+id/date"
@@ -119,7 +121,7 @@
             android:layout_marginTop="16dp"
             android:text="01-05-2010"
             android:textColor="#000000"
-            android:textSize="16sp" />
+            android:textSize="@dimen/date_size" />
 
         <ImageView
             android:id="@+id/imageView"

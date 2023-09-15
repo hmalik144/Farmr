@@ -1,8 +1,12 @@
 package com.appttude.h_mal.farmr.viewmodel
 
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.applandeo.materialcalendarview.EventDay
+import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.data.Repository
 import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry.COLUMN_SHIFT_BREAK
@@ -21,6 +25,7 @@ import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Sortable
 import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.convertDateString
+import com.appttude.h_mal.farmr.utils.convertToCalendar
 import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
 import com.appttude.h_mal.farmr.utils.sortedByOrder
 import jxl.Workbook
@@ -30,6 +35,7 @@ import jxl.write.WritableWorkbook
 import jxl.write.WriteException
 import java.io.File
 import java.io.IOException
+import java.util.Calendar
 import java.util.Locale
 
 
@@ -42,6 +48,8 @@ class MainViewModel(
 
     private var mSort: Sortable = Sortable.ID
     private var mOrder: Order = Order.ASCENDING
+
+    private var selectedItemId: Int? = null
 
     private val observer = Observer<List<ShiftObject>> {
         it?.let {
@@ -93,7 +101,7 @@ class MainViewModel(
         if (second == null) return compareDate.after(first)
         if (first == null) return compareDate.before(second)
 
-        return compareDate.after(first) && compareDate.before(second)
+        return compareDate.compareTo(first) * second.compareTo(compareDate) >= 0
     }
 
 
@@ -199,9 +207,8 @@ class MainViewModel(
     }
 
     fun clearFilters() {
-        super.setFiltrationDetails(null, null, null, null)
-        onSuccess(Success("Filters have been cleared"))
-        refreshLiveData()
+        val result = super.setFiltrationDetails(null, null, null, null)
+        if (result) refreshLiveData()
     }
 
     fun createExcelSheet(file: File): File? {
@@ -281,6 +288,27 @@ class MainViewModel(
             onError("Failed to generate excel sheet of shifts")
         }
         return null
+    }
+
+    fun retrieveEvents(): List<EventDay>? {
+        val shiftList = shiftLiveData.value ?: return null
+        return shiftList.applyFilters().mapNotNull {
+            it.date.convertToCalendar()
+                ?.let { d -> EventDay(d, R.drawable.baseline_list_alt_24, Color.parseColor("#228B22")) }
+        }
+    }
+
+    fun getShiftsOnTheDay(calendar: Calendar): List<ShiftObject>? {
+        val shiftList = shiftLiveData.value ?: return null
+        return shiftList.filter { it.date.convertToCalendar()?.compareTo(calendar) == 0 }
+    }
+
+    fun saveBottomBarState(selectedItemId: Int) {
+        this.selectedItemId = selectedItemId
+    }
+
+    fun getBottomBarState(): Int? {
+        return selectedItemId
     }
 
 }

@@ -44,13 +44,13 @@ class PreferenceProvider(
         timeIn: String?,
         timeOut: String?,
         type: String?
-    ) {
-        preference.edit()
+    ): Boolean {
+        return preference.edit()
             .putString(DESCRIPTION, description)
             .putString(DATE_IN, timeIn)
             .putString(DATE_OUT, timeOut)
             .putString(TYPE, type)
-            .apply()
+            .commit()
     }
 
     fun getFilteringDetails(): Map<String, String?> {

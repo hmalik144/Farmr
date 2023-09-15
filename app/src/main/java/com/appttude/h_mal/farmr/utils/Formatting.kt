@@ -48,6 +48,13 @@ fun String.convertDateString(format: String = DATE_FORMAT): Date? {
     return formatter.parse(this)
 }
 
+fun String.convertToCalendar(format: String = DATE_FORMAT): Calendar? {
+    val date = convertDateString(format)
+    val calendar = Calendar.getInstance()
+    calendar.time = date ?: return null
+    return calendar
+}
+
 /**
  * turns "HH:mm" into an hour and minutes pair
  *

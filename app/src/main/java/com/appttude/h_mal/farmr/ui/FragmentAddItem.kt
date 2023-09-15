@@ -131,6 +131,13 @@ class FragmentAddItem : FormFragment<SubmissionViewModel>(R.layout.fragment_add_
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressed)
+
+        id = try {
+            FragmentAddItemArgs.fromBundle(requireArguments()).shiftId
+        } catch (e: Exception) {
+            Log.i("Nav Args", "Failed to retrieve args from navigation")
+            null
+        }
     }
 
     override fun onResume() {
@@ -150,17 +157,10 @@ class FragmentAddItem : FormFragment<SubmissionViewModel>(R.layout.fragment_add_
     }
 
     private fun setupViewAfterViewCreated() {
-        val id = try {
-            FragmentAddItemArgs.fromBundle(requireArguments()).shiftId
-        } catch (e: Exception) {
-            Log.i("Nav Args", "Failed to retrieve args from navigation")
-            null
-        }
-
         wholeView.hide()
 
         // Since we are editing a shift lets load the shift data into the views
-        id?.let { viewModel.getCurrentShift(id) }?.run {
+        id?.let { viewModel.getCurrentShift(it) }?.run {
             mLocationEditText.setText(description)
             mDateEditText.setText(date)
 

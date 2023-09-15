@@ -4,34 +4,32 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelLazy
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDirections
 import com.appttude.h_mal.farmr.model.ViewState
 import com.appttude.h_mal.farmr.utils.getGenericClassAt
-import com.appttude.h_mal.farmr.utils.popBackStack
+import com.appttude.h_mal.farmr.utils.navigateTo
 import com.appttude.h_mal.farmr.viewmodel.ApplicationViewModelFactory
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import kotlin.properties.Delegates
+import java.io.IOException
 
-@Suppress("EmptyMethod", "EmptyMethod")
-abstract class BaseFragment<V : BaseViewModel>(@LayoutRes contentLayoutId: Int) :
+@Suppress("EmptyMethod")
+abstract class ChildFragment<V : BaseViewModel>(@LayoutRes contentLayoutId: Int) :
     Fragment(contentLayoutId), KodeinAware {
 
     override val kodein by kodein()
     private val factory by instance<ApplicationViewModelFactory>()
 
-    val viewModel: V by getViewModel()
+    lateinit var viewModel: V
 
-    private fun getViewModel(): Lazy<V> =
-        ViewModelLazy(getGenericClassAt(0), storeProducer = { viewModelStore },
-            factoryProducer = { factory } )
-
-    var mActivity: BaseActivity? = null
+    private val parent by lazy { requireParentFragment().requireParentFragment() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mActivity = requireActivity() as BaseActivity
+        viewModel =
+            ViewModelProvider(parent, factory)[getGenericClassAt<V>(0).java]
         configureObserver()
     }
 
@@ -48,27 +46,28 @@ abstract class BaseFragment<V : BaseViewModel>(@LayoutRes contentLayoutId: Int) 
     /**
      *  Called in case of starting operation liveData in viewModel
      */
-    open fun onStarted() {
-        mActivity?.onStarted()
-    }
+    open fun onStarted() {}
 
     /**
      *  Called in case of success or some data emitted from the liveData in viewModel
      */
-    open fun onSuccess(data: Any?) {
-        mActivity?.onSuccess(data)
-    }
+    open fun onSuccess(data: Any?) {}
 
     /**
      *  Called in case of failure or some error emitted from the liveData in viewModel
      */
-    open fun onFailure(error: Any?) {
-        mActivity?.onFailure(error)
+    open fun onFailure(error: Any?) {}
+
+
+    fun navigateParent(navArg: Any) {
+        when(navArg) {
+            is Int -> (parent).navigateTo(navArg)
+            is NavDirections -> (parent).navigateTo(navArg)
+            else -> { throw IOException("${navArg::class} is not a valid navigation argment") }
+        }
     }
 
     fun setTitle(title: String) {
-        (requireActivity() as BaseActivity).setTitleInActionBar(title)
+        (parent as BaseFragment<*>).setTitle(title)
     }
-
-    fun popBackStack() = mActivity?.popBackStack()
 }

@@ -12,6 +12,7 @@ import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.utils.CURRENCY
 import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
+import com.appttude.h_mal.farmr.utils.formatToTwoDp
 import com.appttude.h_mal.farmr.utils.hide
 import com.appttude.h_mal.farmr.utils.navigateTo
 import com.appttude.h_mal.farmr.utils.navigateToFragment
@@ -104,7 +105,7 @@ class FurtherInfoFragment : BaseFragment<InfoViewModel>(R.layout.fragment_futher
                 unitsTV.text = units.toString()
 
                 val paymentSummary =
-                    StringBuilder().append(units.formatAsCurrencyString()).append(" Units @ ")
+                    StringBuilder().append(units.formatToTwoDp()).append(" Units @ ")
                         .append(rateOfPay.formatAsCurrencyString()).append(" per Unit").append("\n")
                         .append("Equals: ").append(totalPay.formatAsCurrencyString())
                 totalPayTV.text = paymentSummary

@@ -23,6 +23,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
+import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.ui.utils.EspressoHelper.waitForView
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.anything
@@ -57,6 +58,8 @@ open class BaseTestRobot {
         .check(matches(withText(textId)))
 
     fun matchText(resId: Int, text: String): ViewInteraction = matchText(matchView(resId), text)
+
+    fun scrollTo(viewId: Int): ViewInteraction = matchView(viewId).perform(ViewActions.scrollTo())
 
     fun clickListItem(listRes: Int, position: Int) {
         onData(anything())

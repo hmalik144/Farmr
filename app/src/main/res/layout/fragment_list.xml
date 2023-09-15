@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.appttude.h_mal.farmr.ui.FragmentList">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_item_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/list_cell_hourly">
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <include
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        layout="@layout/empty_list_view"
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

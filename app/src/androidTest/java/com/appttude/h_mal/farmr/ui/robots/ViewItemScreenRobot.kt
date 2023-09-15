@@ -23,9 +23,9 @@ class ViewItemScreenRobot : BaseTestRobot() {
         matchText(R.id.details_time, "$timeIn-$timeOut")
     }
 
-    fun matchBreakTime(mins: Int) = matchText(R.id.details_breaks, mins.toString())
-    fun matchUnits(units: Float) = fillEditText(R.id.details_units, units.toString())
-    fun matchRateOfPay(rateOfPay: Float) = fillEditText(R.id.details_pay_rate, rateOfPay.toString())
+    fun matchBreakTime(mins: Int) = matchText(R.id.details_breaks, "$mins mins")
+    fun matchUnits(units: Float) = matchText(R.id.details_units, units.toString())
+    fun matchRateOfPay(rateOfPay: Float) = matchText(R.id.details_pay_rate, rateOfPay.toString())
     fun matchTotalPay(pay: String) = matchText(R.id.details_totalpay, pay)
     fun matchDuration(duration: String) = matchText(R.id.details_duration, duration)
 

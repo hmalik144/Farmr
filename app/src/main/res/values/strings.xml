@@ -87,14 +87,18 @@
     <string name="export">Export Data</string>
     <string name="sort">Sort</string>
 
-    <string name="admob_unit_id">ca-app-pub-3406791512187471/7557456476</string>
-    <string name="banner_home_footer">ca-app-pub-3406791512187471~9541579845</string>
-
     <string name="help">Help &amp; Support</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="further_info_title">Shift Details</string>
     <string name="insert_break_in_minutes">insert break in minutes</string>
     <string name="break_res">Break</string>
+    <string name="hours_symbol">h</string>
+    <string name="minutes_symbol">m</string>
+    <string name="piece_symbol">pcs</string>
+    <string name="pound_sign">£</string>
+    <string name="delete_shift">Delete Shift</string>
+    <string name="update_shift">Update Shift</string>
+    <string name="fab">Floating action button</string>
+    <string name="text_label_1">Shifts</string>
+    <string name="text_label_2">Calendar</string>
 </resources>

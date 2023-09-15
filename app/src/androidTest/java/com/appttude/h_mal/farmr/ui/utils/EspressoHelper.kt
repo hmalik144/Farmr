@@ -4,11 +4,13 @@ import android.os.SystemClock.sleep
 import android.view.View
 import android.widget.CheckBox
 import android.widget.Checkable
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.util.TreeIterables
 import org.hamcrest.BaseMatcher
@@ -119,5 +121,15 @@ object EspressoHelper {
             }
 
         throw Exception("Error finding a view matching $viewMatcher")
+    }
+
+    fun waitFor(delay: Long) {
+        onView(isRoot()).perform(object : ViewAction {
+            override fun getConstraints(): Matcher<View> = isRoot()
+            override fun getDescription(): String = "wait for $delay milliseconds"
+            override fun perform(uiController: UiController, v: View?) {
+                uiController.loopMainThreadForAtLeast(delay)
+            }
+        })
     }
 }

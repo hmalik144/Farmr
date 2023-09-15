@@ -4,6 +4,13 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="unit_text_size">20sp</dimen>
+    <dimen name="units_symbol_size">12sp</dimen>
+    <dimen name="total_pay_size">16sp</dimen>
+    <dimen name="location_size">16sp</dimen>
+    <dimen name="date_size">14sp</dimen>
+    <dimen name="unit_holder_width">75dp</dimen>
+    <dimen name="location_autosize_min">12sp</dimen>
 
 
 </resources>

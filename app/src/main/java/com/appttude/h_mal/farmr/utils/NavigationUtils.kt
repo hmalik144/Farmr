@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.appttude.h_mal.farmr.R
+import com.appttude.h_mal.farmr.base.ChildFragment
 
 fun Fragment.navigateToFragment(newFragment: Fragment) {
     childFragmentManager.beginTransaction()

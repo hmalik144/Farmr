@@ -9,28 +9,25 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.FileProvider
-import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.base.BaseFragment
-import com.appttude.h_mal.farmr.data.legacydb.ShiftObject
 import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.Sortable
-import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.createDialog
-import com.appttude.h_mal.farmr.utils.displayToast
 import com.appttude.h_mal.farmr.utils.navigateTo
 import com.appttude.h_mal.farmr.viewmodel.MainViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
 import kotlin.system.exitProcess
 
 
 class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main) {
-    private lateinit var productListView: RecyclerView
-    private lateinit var emptyView: View
-    private lateinit var mAdapter: ShiftListAdapter
-
     private lateinit var onBackPressed: OnBackPressedCallback
+
+    lateinit var navView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +44,6 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main) {
 
     override fun onResume() {
         super.onResume()
-        setTitle("Shift List")
 
         onBackPressed.isEnabled = true
     }
@@ -55,43 +51,37 @@ class FragmentMain : BaseFragment<MainViewModel>(R.layout.fragment_main) {
     override fun onPause() {
         super.onPause()
         onBackPressed.isEnabled = false
+
+        viewModel.saveBottomBarState(navView.selectedItemId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        emptyView = view.findViewById(R.id.empty_view)
-        productListView = view.findViewById(R.id.list_item_view)
+        navView = view.findViewById(R.id.bottom_bar)
+        val navHost = childFragmentManager.findFragmentById(R.id.sub_container) as NavHostFragment
 
-        mAdapter = ShiftListAdapter(this, emptyView) {
-            viewModel.deleteShift(it)
+        val navController = navHost.navController
+        navController.setGraph(R.navigation.home_navigation)
+
+        navView.setupWithNavController(navController)
+
+        viewModel.getBottomBarState()?.let {
+            navView.selectedItemId = it
         }
-        productListView.adapter = mAdapter
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            setTitle(destination.label.toString())
+        }
 
         view.findViewById<FloatingActionButton>(R.id.fab1).setOnClickListener {
             navigateTo(R.id.main_to_addItem)
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.refreshLiveData()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_main, menu)
-    }
-
-    override fun onSuccess(data: Any?) {
-        super.onSuccess(data)
-        if (data is List<*>) {
-            @Suppress("UNCHECKED_CAST")
-            mAdapter.submitList(data as List<ShiftObject>)
-        }
-        if (data is Success) {
-            displayToast(data.successMessage)
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

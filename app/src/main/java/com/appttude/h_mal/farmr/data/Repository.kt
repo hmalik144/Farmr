@@ -20,5 +20,5 @@ interface Repository {
         timeIn: String?,
         timeOut: String?,
         type: String?
-    )
+    ): Boolean
 }

@@ -120,7 +120,7 @@ workflows:
               only:
                 - master
                 - release
-                - ui_test.*
+                - /ui_test.*/
       - deploy-to-playstore:
           context: appttude
           filters:

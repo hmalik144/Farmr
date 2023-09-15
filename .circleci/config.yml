@@ -39,7 +39,7 @@ commands:
       - android/start-emulator-and-run-tests:
           post-emulator-launch-assemble-command: ./gradlew assembleAndroidTest
           test-command: ./gradlew connectedDebugAndroidTest --continue
-          system-image: system-images;android-26;google_apis;x86
+          system-image: system-images;android-31;default;x86_64
       # store screenshots for failed ui tests
       - when:
           condition: on_fail

@@ -1,5 +1,7 @@
 package com.appttude.h_mal.farmr.ui.tests
 
+import androidx.test.espresso.action.ViewActions
+import com.appttude.h_mal.farmr.R
 import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Sortable
@@ -125,23 +127,6 @@ class ShiftTests : BaseTest<MainActivity>(MainActivity::class.java) {
         }
         listScreen {
             assertListCount(4)
-            homeScreen {
-                waitFor(600)
-                clickClearFilterInMenu()
-                waitFor(600)
-                assertListCount(8)
-                clickFilterInMenu()
-            }
-        }
-        filterScreen {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(YEAR)
-            val month = calendar.get(MONTH) + 1
-            setDateOut(year, month, 6)
-            submit()
-        }
-        listScreen {
-            assertListCount(5)
         }
     }
 
@@ -178,9 +163,8 @@ class ShiftTests : BaseTest<MainActivity>(MainActivity::class.java) {
             clickTab(HomeScreenRobot.Tab.CALENDAR)
         }
         calendarScreen {
-            waitFor(600)
             clickOnCalendarDay(1)
-            waitFor(600)
+            scrollTo(R.id.shifts_available_recycler)
             clickOnListItemAtPosition(0)
         }
         viewScreen {

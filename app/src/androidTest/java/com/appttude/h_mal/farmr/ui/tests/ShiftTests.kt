@@ -126,6 +126,7 @@ class ShiftTests : BaseTest<MainActivity>(MainActivity::class.java) {
         listScreen {
             assertListCount(4)
             homeScreen {
+                waitFor(600)
                 clickClearFilterInMenu()
                 waitFor(600)
                 assertListCount(8)
@@ -179,6 +180,7 @@ class ShiftTests : BaseTest<MainActivity>(MainActivity::class.java) {
         calendarScreen {
             waitFor(600)
             clickOnCalendarDay(1)
+            waitFor(600)
             clickOnListItemAtPosition(0)
         }
         viewScreen {

@@ -1,7 +1,6 @@
 package com.appttude.h_mal.farmr.viewmodel
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.applandeo.materialcalendarview.EventDay
@@ -23,7 +22,6 @@ import com.appttude.h_mal.farmr.data.room.entity.ShiftEntity
 import com.appttude.h_mal.farmr.model.Order
 import com.appttude.h_mal.farmr.model.ShiftType
 import com.appttude.h_mal.farmr.model.Sortable
-import com.appttude.h_mal.farmr.model.Success
 import com.appttude.h_mal.farmr.utils.convertDateString
 import com.appttude.h_mal.farmr.utils.convertToCalendar
 import com.appttude.h_mal.farmr.utils.formatAsCurrencyString
@@ -52,14 +50,8 @@ class MainViewModel(
 
     private val observer = Observer<List<ShiftEntity>> {
         it?.let { updateFiltrationAndPostResults(it) }
-    private var selectedItemId: Int? = null
-
-    private val observer = Observer<List<ShiftObject>> {
-        it?.let {
-            val result = it.applyFilters().sortList(mSort, mOrder)
-            onSuccess(result)
-        }
     }
+
 
     init {
         shiftLiveData.observeForever(observer)
@@ -314,15 +306,22 @@ class MainViewModel(
 
     fun retrieveEvents(): List<EventDay>? {
         val shiftList = shiftLiveData.value ?: return null
-        return shiftList.applyFilters().mapNotNull {
+        return shiftList.map { it.convertToShiftObject() }.applyFilters().mapNotNull {
             it.date.convertToCalendar()
-                ?.let { d -> EventDay(d, R.drawable.baseline_list_alt_24, Color.parseColor("#228B22")) }
+                ?.let { d ->
+                    EventDay(
+                        d,
+                        R.drawable.baseline_list_alt_24,
+                        Color.parseColor("#228B22")
+                    )
+                }
         }
     }
 
     fun getShiftsOnTheDay(calendar: Calendar): List<ShiftObject>? {
         val shiftList = shiftLiveData.value ?: return null
-        return shiftList.filter { it.date.convertToCalendar()?.compareTo(calendar) == 0 }
+        return shiftList.map { it.convertToShiftObject() }
+            .filter { it.date.convertToCalendar()?.compareTo(calendar) == 0 }
     }
 
     fun saveBottomBarState(selectedItemId: Int) {

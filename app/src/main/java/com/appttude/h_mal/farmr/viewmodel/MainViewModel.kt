@@ -101,7 +101,7 @@ class MainViewModel(
         if (second == null) return compareDate.after(first)
         if (first == null) return compareDate.before(second)
 
-        return compareDate.after(first) && compareDate.before(second)
+        return compareDate.compareTo(first) * second.compareTo(compareDate) >= 0
     }
 
 

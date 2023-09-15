@@ -15,6 +15,8 @@ import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import com.appttude.h_mal.farmr.application.TestAppClass
+import com.appttude.h_mal.farmr.ui.utils.EspressoHelper.waitFor
+import com.appttude.h_mal.farmr.ui.utils.generateShifts
 import com.appttude.h_mal.farmr.ui.utils.getShifts
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matcher
@@ -73,16 +75,6 @@ open class BaseTest<A : Activity>(
     open fun afterLaunch() {}
     open fun testFinished() {}
 
-    fun waitFor(delay: Long) {
-        Espresso.onView(ViewMatchers.isRoot()).perform(object : ViewAction {
-            override fun getConstraints(): Matcher<View> = ViewMatchers.isRoot()
-            override fun getDescription(): String = "wait for $delay milliseconds"
-            override fun perform(uiController: UiController, v: View?) {
-                uiController.loopMainThreadForAtLeast(delay)
-            }
-        })
-    }
-
     @Suppress("DEPRECATION")
     fun checkToastMessage(message: String) {
         Espresso.onView(ViewMatchers.withText(message)).inRoot(withDecorView(Matchers.not(decorView)))
@@ -95,7 +87,7 @@ open class BaseTest<A : Activity>(
     fun navigateBack() = Espresso.pressBack()
 
     fun addRandomShifts() {
-        testApp.addShiftsToDatabase(getShifts())
+        testApp.addShiftsToDatabase(generateShifts())
     }
 
     fun clearDataBase() = testApp.clearDatabase()

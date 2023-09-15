@@ -12,6 +12,7 @@ import com.appttude.h_mal.farmr.ui.robots.filterScreen
 import com.appttude.h_mal.farmr.ui.robots.homeScreen
 import com.appttude.h_mal.farmr.ui.robots.listScreen
 import com.appttude.h_mal.farmr.ui.robots.viewScreen
+import com.appttude.h_mal.farmr.ui.utils.EspressoHelper.waitFor
 import org.junit.Test
 import java.util.Calendar
 import java.util.Calendar.MONTH
@@ -126,6 +127,7 @@ class ShiftTests : BaseTest<MainActivity>(MainActivity::class.java) {
             assertListCount(4)
             homeScreen {
                 clickClearFilterInMenu()
+                waitFor(600)
                 assertListCount(8)
                 clickFilterInMenu()
             }
@@ -175,6 +177,7 @@ class ShiftTests : BaseTest<MainActivity>(MainActivity::class.java) {
             clickTab(HomeScreenRobot.Tab.CALENDAR)
         }
         calendarScreen {
+            waitFor(600)
             clickOnCalendarDay(1)
             clickOnListItemAtPosition(0)
         }

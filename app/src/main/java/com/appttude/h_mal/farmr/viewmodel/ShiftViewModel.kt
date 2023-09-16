@@ -16,7 +16,7 @@ open class ShiftViewModel(
     /*
      * Add Item & Further info
      */
-    fun getCurrentShift(id: Long) = repository.readSingleShiftFromDatabase(id)
+    fun getCurrentShift(id: Long) = repository.readSingleShiftFromDatabase(id)?.convertToShiftObject()
 
     open fun setFiltrationDetails(
         description: String?,

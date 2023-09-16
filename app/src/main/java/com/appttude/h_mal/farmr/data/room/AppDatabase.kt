@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsDbHelper
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsDbHelper.Companion.DATABASE_NAME
 import com.appttude.h_mal.farmr.data.room.converters.DateConverter
@@ -14,6 +15,7 @@ import com.appttude.h_mal.farmr.data.room.converters.TimeConverter
 import com.appttude.h_mal.farmr.data.room.entity.ShiftEntity
 import com.appttude.h_mal.farmr.data.room.migrations.MIGRATION_4_5
 
+const val ROOM_DATABASE = "room_${ShiftsContract.ShiftsEntry.TABLE_NAME}"
 @Database(
     entities = [ShiftEntity::class],
     version = 5,

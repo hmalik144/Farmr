@@ -20,18 +20,18 @@ interface ShiftDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsertListOfFullShift(items: List<ShiftEntity>)
 
-    @Query("SELECT * FROM shifts WHERE ${ShiftsEntry._ID} = :shiftId LIMIT 1")
+    @Query("SELECT * FROM $ROOM_DATABASE WHERE ${ShiftsEntry._ID} = :shiftId LIMIT 1")
     fun getCurrentFullShift(shiftId: Long): LiveData<ShiftEntity>
 
-    @Query("SELECT * FROM shifts WHERE ${ShiftsEntry._ID} = :shiftId LIMIT 1")
+    @Query("SELECT * FROM $ROOM_DATABASE WHERE ${ShiftsEntry._ID} = :shiftId LIMIT 1")
     fun getCurrentFullShiftSingle(shiftId: Long): ShiftEntity?
 
-    @Query("SELECT * FROM shifts")
+    @Query("SELECT * FROM $ROOM_DATABASE")
     fun getAllFullShift(): LiveData<List<ShiftEntity>>
 
-    @Query("DELETE FROM shifts WHERE ${ShiftsEntry._ID} = :shiftId")
+    @Query("DELETE FROM $ROOM_DATABASE WHERE ${ShiftsEntry._ID} = :shiftId")
     fun deleteShift(shiftId: Long): Int
 
-    @Query("DELETE FROM shifts")
+    @Query("DELETE FROM $ROOM_DATABASE")
     fun deleteAllShifts(): Int
 }

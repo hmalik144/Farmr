@@ -3,6 +3,7 @@ package com.appttude.h_mal.farmr.data.room.migrations
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.appttude.h_mal.farmr.data.legacydb.ShiftsContract.ShiftsEntry
+import com.appttude.h_mal.farmr.data.legacydb.ShiftsDbHelper
 import com.appttude.h_mal.farmr.data.room.ROOM_DATABASE
 import com.appttude.h_mal.farmr.model.ShiftType
 
@@ -19,7 +20,7 @@ val MIGRATION_4_5 = object : Migration(4, 5) {
                     "${ShiftsEntry.COLUMN_SHIFT_TIME_OUT}  TEXT NOT NULL, " +
                     "${ShiftsEntry.COLUMN_SHIFT_BREAK} INTEGER NOT NULL DEFAULT 0, " +
                     "${ShiftsEntry.COLUMN_SHIFT_DURATION} REAL NOT NULL DEFAULT 0, " +
-                    "${ShiftsEntry.COLUMN_SHIFT_TYPE} TEXT NOT NULL DEFAULT ${ShiftType.HOURLY.type}, " +
+                    "${ShiftsEntry.COLUMN_SHIFT_TYPE} TEXT NOT NULL DEFAULT " + ShiftType.HOURLY.type + ", " +
                     "${ShiftsEntry.COLUMN_SHIFT_UNIT} REAL NOT NULL DEFAULT 0, " +
                     "${ShiftsEntry.COLUMN_SHIFT_PAYRATE} REAL NOT NULL DEFAULT 0, " +
                     "${ShiftsEntry.COLUMN_SHIFT_TOTALPAY} REAL NOT NULL DEFAULT 0)"

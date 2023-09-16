@@ -20,7 +20,7 @@ data class ShiftEntity(
     @ColumnInfo(name = ShiftsEntry.COLUMN_SHIFT_TIME_OUT) val timeOut: Time,
     @ColumnInfo(name = ShiftsEntry.COLUMN_SHIFT_BREAK, defaultValue = "0") val breakMins: Int? = 0,
     @ColumnInfo(name = ShiftsEntry.COLUMN_SHIFT_DURATION, defaultValue = "0") val duration: Float = 0f,
-    @ColumnInfo(name = ShiftsEntry.COLUMN_SHIFT_TYPE, defaultValue = "Hourly") val type: String,
+    @ColumnInfo(name = ShiftsEntry.COLUMN_SHIFT_TYPE, defaultValue = "'Hourly'") val type: String,
     @ColumnInfo(name = ShiftsEntry.COLUMN_SHIFT_UNIT, defaultValue = "0") val units: Float? = 0f,
     @ColumnInfo(name = ShiftsEntry.COLUMN_SHIFT_PAYRATE, defaultValue = "0") val payRate: Float? = 0f,
     @ColumnInfo(name = ShiftsEntry.COLUMN_SHIFT_TOTALPAY, defaultValue = "0") val totalPay: Float? = 0f,

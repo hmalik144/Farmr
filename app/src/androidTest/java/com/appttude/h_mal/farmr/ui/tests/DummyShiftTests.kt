@@ -6,7 +6,7 @@ import com.appttude.h_mal.farmr.ui.robots.homeScreen
 import org.junit.Ignore
 import org.junit.Test
 
-@Ignore
+//@Ignore
 class DummyShiftTests : BaseTest<MainActivity>(MainActivity::class.java) {
 
     override fun afterLaunch() {
